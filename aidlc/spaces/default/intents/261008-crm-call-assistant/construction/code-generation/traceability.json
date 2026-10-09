@@ -1,0 +1,58 @@
+{
+  "stage": "code-generation",
+  "upstream_ids": ["FR1", "FR1.3", "FR2", "FR3", "FR4", "FR7"],
+  "coverage": [
+    {
+      "id": "FR1",
+      "status": "OK",
+      "target": "backend/src/main/java/com/mb/callassistant/web/CallController.java"
+    },
+    {
+      "id": "FR1.3",
+      "status": "OK",
+      "target": "backend/src/main/java/com/mb/callassistant/service/CallPipelineService.java"
+    },
+    {
+      "id": "FR2",
+      "status": "OK",
+      "target": "backend/src/main/java/com/mb/callassistant/service/RecordingClient.java"
+    },
+    {
+      "id": "FR3",
+      "status": "OK",
+      "target": "backend/src/main/java/com/mb/callassistant/service/RecordingService.java"
+    },
+    {
+      "id": "FR4",
+      "status": "OK",
+      "target": "backend/src/main/java/com/mb/callassistant/service/SttService.java"
+    },
+    {
+      "id": "FR7",
+      "status": "OK",
+      "target": "docker-compose.yml"
+    }
+  ],
+  "reverse": [
+    {
+      "id": "FR2.2",
+      "status": "OK",
+      "target": "backend/src/main/java/com/mb/callassistant/service/CallService.java"
+    },
+    {
+      "id": "FR2.3",
+      "status": "OK",
+      "target": "backend/src/main/java/com/mb/callassistant/service/WavStereoSplitter.java"
+    },
+    {
+      "id": "FR5",
+      "status": "Deferred",
+      "target": "AI smart tasks deferred to a later pass per user instruction"
+    },
+    {
+      "id": "FR6",
+      "status": "Deferred",
+      "target": "Figma-matched MB UI deferred; placeholder public/app.html with TODO anchors"
+    }
+  ]
+}

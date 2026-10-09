@@ -1,0 +1,26 @@
+{
+  "stage": "domain-design",
+  "upstream_ids": [
+    "US1.1", "US1.2", "US1.3",
+    "US2.1", "US2.2", "US2.3", "US2.4",
+    "US3.1", "US3.2", "US3.3", "US3.4",
+    "US4.1", "US4.2", "US4.3", "US4.4"
+  ],
+  "coverage": [
+    { "id": "US1.1", "status": "OK", "target": "CallComponent, MicrosipBridge, WebFrontend" },
+    { "id": "US1.2", "status": "OK", "target": "CopilotComponent, LlmClient, PolicyDocument" },
+    { "id": "US1.3", "status": "OK", "target": "CopilotComponent, CopilotQueryLog" },
+    { "id": "US2.1", "status": "OK", "target": "CallComponent, TranscriptionComponent, CallAnalysisComponent" },
+    { "id": "US2.2", "status": "OK", "target": "CallAnalysisComponent, CallAnalysis" },
+    { "id": "US2.3", "status": "OK", "target": "KeyinComponent, CallKeyin, AiFeedback, TaskComponent" },
+    { "id": "US2.4", "status": "OK", "target": "CallComponent, LeadComponent, WebFrontend" },
+    { "id": "US3.1", "status": "OK", "target": "LeadComponent, Activity" },
+    { "id": "US3.2", "status": "OK", "target": "TaskComponent, Task" },
+    { "id": "US3.3", "status": "OK", "target": "TaskComponent, Task" },
+    { "id": "US3.4", "status": "OK", "target": "TaskComponent, WebFrontend" },
+    { "id": "US4.1", "status": "OK", "target": "AuthComponent, RmUser" },
+    { "id": "US4.2", "status": "OK", "target": "LeadComponent, Lead" },
+    { "id": "US4.3", "status": "OK", "target": "LeadComponent, Customer, Lead" },
+    { "id": "US4.4", "status": "OK", "target": "CallComponent, CallRecord, MicrosipBridge" }
+  ]
+}

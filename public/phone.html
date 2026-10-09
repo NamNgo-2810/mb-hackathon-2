@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WebRTC Softphone (SIP.js)</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: grid; place-items: start center;
+    font-family: system-ui, Segoe UI, Roboto, sans-serif;
+    background: #0f1115; color: #e8eaed; padding: 32px 16px;
+  }
+  .card {
+    width: 440px; max-width: 100%; background: #171a21;
+    border: 1px solid #2a2f3a; border-radius: 12px; padding: 24px; margin-bottom: 16px;
+  }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  h2 { font-size: 14px; margin: 0 0 12px; color: #9aa0ab; text-transform: uppercase; letter-spacing: .04em; }
+  p.sub { margin: 0 0 18px; color: #9aa0ab; font-size: 13px; }
+  label { display: block; font-size: 13px; color: #9aa0ab; margin-bottom: 12px; }
+  input {
+    display: block; width: 100%; margin-top: 6px; padding: 10px 12px; border-radius: 8px;
+    border: 1px solid #2a2f3a; background: #1f2430; color: #e8eaed; font-size: 15px;
+  }
+  input:focus { outline: none; border-color: #4c8bf5; }
+  .row { display: flex; gap: 12px; }
+  .row > * { flex: 1; }
+  button {
+    width: 100%; padding: 11px; border: 0; border-radius: 8px; cursor: pointer;
+    background: #4c8bf5; color: #fff; font-size: 15px; margin-top: 4px;
+  }
+  button:hover { background: #3a76db; }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  button.danger { background: #e5484d; } button.danger:hover { background: #c93b40; }
+  button.ghost { background: transparent; border: 1px solid #2a2f3a; color: #9aa0ab; }
+  button.ghost:hover { background: #1f2430; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px;
+    border-radius: 999px; font-size: 13px; background: #1f2430; border: 1px solid #2a2f3a;
+  }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: #9aa0ab; }
+  .dot.ok { background: #2ecc71; } .dot.warn { background: #f5a623; } .dot.err { background: #e5484d; }
+  .dot.pulse { animation: pulse 1.1s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: .3 } }
+  .status { margin-top: 16px; padding: 14px; border-radius: 10px; background: #1f2430; border: 1px solid #2a2f3a; }
+  .status .big { font-weight: 600; margin-bottom: 4px; }
+  .status .muted { color: #9aa0ab; font-size: 13px; }
+  .error { color: #e5484d; font-size: 13px; margin: 10px 0 0; white-space: pre-wrap; }
+  .hint { color: #6b7280; font-size: 12px; margin-top: 14px; line-height: 1.5; }
+  .log {
+    margin-top: 10px; height: 120px; overflow-y: auto; background: #0b0d11; border: 1px solid #2a2f3a;
+    border-radius: 8px; padding: 10px; font: 12px/1.5 ui-monospace, Menlo, monospace; color: #9aa0ab; white-space: pre-wrap;
+  }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h1>WebRTC Softphone</h1>
+      <span class="pill"><span id="regDot" class="dot"></span><span id="regText">Not registered</span></span>
+    </div>
+    <p class="sub">Your browser becomes a SIP phone and carries the audio. Register as a FreeSWITCH extension, then call another one.</p>
+
+    <section id="connectForm">
+      <h2>Connect</h2>
+      <label>SIP WebSocket URL
+        <input id="wsUrl" placeholder="wss://your-fs-host:7443" />
+      </label>
+      <label>SIP domain
+        <input id="domain" placeholder="your-fs-host or SIP domain" />
+      </label>
+      <div class="row">
+        <label>Extension
+          <input id="ext" placeholder="1000" />
+        </label>
+        <label>Password
+          <input id="pass" type="password" placeholder="SIP password" />
+        </label>
+      </div>
+
+      <details style="margin-bottom:12px;">
+        <summary style="cursor:pointer; color:#9aa0ab; font-size:13px; margin-bottom:10px;">
+          ICE / TURN (needed for audio across NAT)
+        </summary>
+        <label>STUN URL
+          <input id="stunUrl" placeholder="stun:stun.l.google.com:19302" />
+        </label>
+        <label>TURN URL
+          <input id="turnUrl" placeholder="turn:32.236.141.36:3478" />
+        </label>
+        <div class="row">
+          <label>TURN username
+            <input id="turnUser" placeholder="demo" />
+          </label>
+          <label>TURN credential
+            <input id="turnPass" type="password" placeholder="demo-secret" />
+          </label>
+        </div>
+        <label style="display:flex; align-items:center; gap:8px; flex-direction:row;">
+          <input id="forceRelay" type="checkbox" style="width:auto; margin:0;" />
+          Force TURN relay (iceTransportPolicy = relay) — use to prove TURN works
+        </label>
+      </details>
+
+      <button id="connectBtn">Register</button>
+    </section>
+
+    <section id="phonePanel" class="hidden">
+      <h2>Call</h2>
+      <label>Call to (extension)
+        <input id="dest" placeholder="1001" />
+      </label>
+      <button id="callBtn">Call</button>
+      <div id="status" class="status hidden"></div>
+      <button id="disconnectBtn" class="ghost" style="margin-top:14px;">Unregister</button>
+    </section>
+
+    <p id="error" class="error hidden"></p>
+    <p class="hint">
+      WebRTC needs a secure context. Opening this page at <b>http://localhost</b> is fine, but
+      connecting to a remote FreeSWITCH requires <b>wss://</b> (TLS). If FreeSWITCH uses a
+      self-signed cert, open <code>https://your-fs-host:7443</code> once and accept the warning first.
+      Allow microphone access when prompted.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Option B — Call via MicroSIP (desktop app)</h2>
+    <p class="sub">Drives the MicroSIP softphone installed on this PC. The server runs
+      <code>microsip.exe</code> locally — audio plays through MicroSIP, not the browser.
+      MicroSIP must be installed, running, and registered to your extension.</p>
+    <label>Call to (number / extension)
+      <input id="msDest" placeholder="1001" />
+    </label>
+    <div class="row">
+      <button id="msCallBtn">Call via MicroSIP</button>
+      <button id="msHangupBtn" class="danger">Hang up</button>
+    </div>
+    <button id="msAnswerBtn" class="ghost" style="margin-top:10px;">Answer incoming</button>
+    <p id="msStatus" class="muted" style="margin-top:10px;"></p>
+
+    <div style="margin-top:14px; padding-top:14px; border-top:1px solid #2a2f3a;">
+      <div class="row" style="align-items:center;">
+        <span class="pill"><span id="msEvtDot" class="dot"></span><span id="msEvtText">Events: not connected</span></span>
+      </div>
+      <button id="msConfigBtn" class="ghost" style="margin-top:10px;">Set up call notifications</button>
+      <p class="hint">One-time setup: writes small hook scripts and points MicroSIP's
+        <code>cmdCall*</code> settings at this server, so the web app is notified when a call
+        starts/ends. After clicking, fully quit MicroSIP (tray → Exit) and reopen it.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Log</h2>
+    <div id="log" class="log"></div>
+  </div>
+
+  <!-- Remote party audio is played here. `controls` is shown so you can
+       manually start playback if the browser's autoplay policy blocks it. -->
+  <div class="card" id="audioCard">
+    <h2>Call audio</h2>
+    <audio id="remoteAudio" autoplay controls playsinline style="width:100%;"></audio>
+    <button id="enableAudioBtn" style="margin-top:10px;">🔊 Enable / resume audio</button>
+    <p class="hint">If you see packets arriving in the log but hear nothing, click the button
+      above (browsers block autoplay until you interact with the page).</p>
+  </div>
+
+  <!-- SIP.js ships as ES modules only; import SimpleUser via an ESM CDN.
+       No bundler needed — modern browsers load this directly. -->
+  <script type="module">
+  import { SimpleUser } from 'https://esm.sh/sip.js@0.21.2/lib/platform/web';
+  (function () {
+    const $ = (id) => document.getElementById(id);
+    const log = (m) => {
+      const el = $('log');
+      el.textContent += `[${new Date().toLocaleTimeString()}] ${m}\n`;
+      el.scrollTop = el.scrollHeight;
+    };
+    const showError = (m) => { const e = $('error'); e.textContent = m || ''; e.classList.toggle('hidden', !m); };
+    const setReg = (state, text) => {
+      $('regDot').className = 'dot ' + (state || '');
+      $('regText').textContent = text;
+    };
+
+    // Persist connection fields across reloads for convenience during a demo.
+    const SAVE_KEYS = ['wsUrl', 'domain', 'ext', 'stunUrl', 'turnUrl', 'turnUser'];
+    SAVE_KEYS.forEach((k) => { const v = localStorage.getItem('sp_' + k); if (v) $(k).value = v; });
+    // Sensible default STUN so there's always at least one ICE server.
+    if (!$('stunUrl').value) $('stunUrl').value = 'stun:stun.l.google.com:19302';
+
+    let simpleUser = null;
+    let inCall = false;
+
+    function renderCall(state, who) {
+      const s = $('status');
+      s.classList.remove('hidden');
+      if (state === 'ringing-out') {
+        s.innerHTML = `<div class="big">Calling ${who}…</div><div class="muted">Ringing</div>`;
+        addHangup(s);
+      } else if (state === 'ringing-in') {
+        s.innerHTML = `<div class="big">Incoming call from ${who}</div>`;
+        const ans = document.createElement('button'); ans.textContent = 'Answer'; ans.style.marginTop = '12px';
+        ans.onclick = () => simpleUser.answer();
+        const rej = document.createElement('button'); rej.textContent = 'Reject'; rej.className = 'danger'; rej.style.marginTop = '8px';
+        rej.onclick = () => simpleUser.decline();
+        s.appendChild(ans); s.appendChild(rej);
+      } else if (state === 'active') {
+        s.innerHTML = `<div class="big">In call${who ? ' with ' + who : ''}</div><div class="muted">Connected</div>`;
+        addHangup(s);
+      } else if (state === 'ended') {
+        s.innerHTML = `<div class="big">Call ended</div>`;
+        setTimeout(() => s.classList.add('hidden'), 2500);
+      }
+    }
+    function addHangup(s) {
+      const b = document.createElement('button'); b.textContent = 'Hang up'; b.className = 'danger'; b.style.marginTop = '12px';
+      b.onclick = () => simpleUser.hangup();
+      s.appendChild(b);
+    }
+
+    // Dig the RTCPeerConnection out of SIP.js and report what's happening with
+    // media. This is the key diagnostic for "connected but no audio".
+    function attachIceDiagnostics() {
+      try {
+        const session = simpleUser && simpleUser.session;
+        const sdh = session && session.sessionDescriptionHandler;
+        const pc = sdh && sdh.peerConnection;
+        if (!pc) { log('No peer connection to inspect yet.'); return; }
+
+        pc.oniceconnectionstatechange = () => {
+          log('ICE state: ' + pc.iceConnectionState);
+          if (pc.iceConnectionState === 'failed') {
+            showError('Media path failed (ICE). You almost certainly need a working TURN server — ' +
+              'fill in the TURN fields and try "Force TURN relay".');
+          }
+        };
+
+        // Report the selected candidate pair once connected: host/srflx/relay.
+        const reportPair = async () => {
+          try {
+            const stats = await pc.getStats();
+            let local, remote, inboundAudio, codec, track, outboundAudio, micSource;
+            stats.forEach((r) => {
+              if (r.type === 'candidate-pair' && r.state === 'succeeded' && r.nominated) {
+                local = stats.get(r.localCandidateId);
+                remote = stats.get(r.remoteCandidateId);
+              }
+              if (r.type === 'inbound-rtp' && r.kind === 'audio') inboundAudio = r;
+              if (r.type === 'media-source' || (r.type === 'track' && r.kind === 'audio')) track = r;
+              if (r.type === 'outbound-rtp' && r.kind === 'audio') outboundAudio = r;
+              if (r.type === 'media-source' && r.kind === 'audio') micSource = r;
+            });
+            if (inboundAudio && inboundAudio.codecId) codec = stats.get(inboundAudio.codecId);
+
+            if (local && remote) {
+              log(`Media path: local=${local.candidateType} remote=${remote.candidateType}` +
+                (local.candidateType === 'relay' || remote.candidateType === 'relay' ? ' (via TURN relay)' : ''));
+            }
+            if (inboundAudio) {
+              const pkts = inboundAudio.packetsReceived || 0;
+              const bytes = inboundAudio.bytesReceived || 0;
+              // audioLevel ~0 means the arriving audio is literally silent.
+              const level = inboundAudio.audioLevel != null ? inboundAudio.audioLevel
+                : (track && track.audioLevel != null ? track.audioLevel : 'n/a');
+              const energy = inboundAudio.totalAudioEnergy != null ? inboundAudio.totalAudioEnergy : 'n/a';
+              log(`Audio in: ${pkts} pkts, ${bytes} bytes, codec=${codec ? codec.mimeType : '?'}, ` +
+                `level=${level}, energy=${energy}`);
+              if (pkts > 0 && (level === 0 || level === 'n/a') && (energy === 0 || energy === 'n/a')) {
+                log('NOTE: packets arrive but audioLevel/energy is ~0 → the incoming stream is SILENT ' +
+                  '(far end not sending real audio, or a codec/transcoding issue on FreeSWITCH).');
+              }
+            }
+
+            // Outbound: is OUR microphone actually sending real audio? On an echo
+            // test (9196) you only hear something if this mic level is non-zero.
+            const micLevel = micSource && micSource.audioLevel != null ? micSource.audioLevel : 'n/a';
+            if (outboundAudio) {
+              log(`Audio out (your mic): ${outboundAudio.packetsSent || 0} pkts sent, mic level=${micLevel}`);
+              if (micLevel === 0 || micLevel === 'n/a' || (typeof micLevel === 'number' && micLevel < 0.001)) {
+                log('NOTE: your mic level is ~0 → the browser is sending silence. On the 9196 echo test ' +
+                  'you will hear nothing because there is nothing to echo. Check mic input/permission, or ' +
+                  'test with a real talker on the other extension.');
+              }
+            }
+          } catch (e) { /* stats not ready */ }
+        };
+        // Sample a few times as the call settles.
+        setTimeout(reportPair, 3000);
+        setTimeout(reportPair, 7000);
+        setTimeout(reportPair, 12000);
+
+        // Make sure the remote stream is actually attached to the audio element
+        // and that the element isn't muted / zero volume / paused.
+        pc.ontrack = (ev) => {
+          const el = $('remoteAudio');
+          if (el && ev.streams && ev.streams[0]) {
+            if (el.srcObject !== ev.streams[0]) {
+              el.srcObject = ev.streams[0];
+              log('Remote audio track attached.');
+            }
+            el.muted = false;
+            el.volume = 1.0;
+            el.play().then(() => log('Audio element playing.')).catch((e) => {
+              log('Autoplay blocked (' + (e && e.name) + ') — click "Enable / resume audio".');
+            });
+          }
+        };
+
+        // Report element state so "no audio" is unambiguous.
+        setTimeout(() => {
+          const el = $('remoteAudio');
+          log(`Audio element: paused=${el.paused} muted=${el.muted} volume=${el.volume} ` +
+            `tracks=${el.srcObject ? el.srcObject.getAudioTracks().length : 0}`);
+        }, 4000);
+      } catch (e) {
+        log('ICE diagnostics error: ' + (e && e.message));
+      }
+    }
+
+    async function connect() {
+      showError('');
+      const wsUrl = $('wsUrl').value.trim();
+      const domain = $('domain').value.trim();
+      const ext = $('ext').value.trim();
+      const pass = $('pass').value;
+      if (!wsUrl || !domain || !ext) { showError('Fill in WS URL, domain and extension.'); return; }
+      SAVE_KEYS.forEach((k) => { const el = $(k); if (el) localStorage.setItem('sp_' + k, el.value.trim()); });
+
+      const aor = `sip:${ext}@${domain}`;
+      log(`Connecting ${aor} via ${wsUrl}`);
+      setReg('warn', 'Connecting…');
+      $('connectBtn').disabled = true;
+
+      // Build the ICE server list from the form. STUN helps discover the
+      // public path; TURN relays media when a direct path can't be formed
+      // (the usual case: browser behind NAT <-> FreeSWITCH on a cloud box).
+      const iceServers = [];
+      const stunUrl = $('stunUrl').value.trim();
+      const turnUrl = $('turnUrl').value.trim();
+      const turnUser = $('turnUser').value.trim();
+      const turnPass = $('turnPass').value;
+      if (stunUrl) iceServers.push({ urls: stunUrl });
+      if (turnUrl) iceServers.push({ urls: turnUrl, username: turnUser, credential: turnPass });
+      const forceRelay = $('forceRelay').checked;
+      log(`ICE servers: ${iceServers.map((s) => s.urls).join(', ') || '(none)'}${forceRelay ? ' [relay-only]' : ''}`);
+
+      const peerConnectionConfiguration = { iceServers };
+      if (forceRelay) peerConnectionConfiguration.iceTransportPolicy = 'relay';
+
+      const options = {
+        aor,
+        media: { constraints: { audio: true, video: false }, remote: { audio: $('remoteAudio') } },
+        userAgentOptions: {
+          authorizationUsername: ext,
+          authorizationPassword: pass,
+          // Helpful logs in the browser console during the demo.
+          logLevel: 'warn',
+        },
+        // SIP.js forwards this straight to the RTCPeerConnection.
+        sessionDescriptionHandlerFactoryOptions: {
+          peerConnectionConfiguration,
+        },
+        delegate: {
+          onCallReceived: () => { inCall = true; renderCall('ringing-in', 'caller'); log('Incoming call'); attachIceDiagnostics(); },
+          onCallAnswered: () => { inCall = true; renderCall('active'); log('Call answered'); attachIceDiagnostics(); },
+          onCallHangup: () => { inCall = false; renderCall('ended'); log('Call hung up'); },
+          onServerDisconnect: (e) => { setReg('err', 'Disconnected'); log('Server disconnected: ' + (e?.error || '')); },
+          onRegistered: () => { setReg('ok', `Registered as ${ext}`); log('Registered'); },
+          onUnregistered: () => { setReg('', 'Not registered'); log('Unregistered'); },
+        },
+      };
+
+      try {
+        simpleUser = new SimpleUser(wsUrl, options);
+        await simpleUser.connect();
+        log('WebSocket connected');
+        await simpleUser.register();
+        $('connectForm').classList.add('hidden');
+        $('phonePanel').classList.remove('hidden');
+      } catch (err) {
+        setReg('err', 'Failed');
+        showError('Could not connect/register:\n' + (err && err.message ? err.message : String(err)) +
+          '\n\nCommon causes: wrong WS URL, self-signed cert not accepted (open the wss host in a tab first), or bad SIP password.');
+        log('Connect error: ' + (err && err.message));
+        $('connectBtn').disabled = false;
+      }
+    }
+
+    async function call() {
+      showError('');
+      const dest = $('dest').value.trim();
+      if (!dest) { showError('Enter a destination extension.'); return; }
+      const domain = $('domain').value.trim();
+      const target = `sip:${dest}@${domain}`;
+      try {
+        log('Calling ' + target);
+        renderCall('ringing-out', dest);
+        await simpleUser.call(target);
+      } catch (err) {
+        showError('Call failed: ' + (err && err.message ? err.message : String(err)));
+        log('Call error: ' + (err && err.message));
+      }
+    }
+
+    async function disconnect() {
+      try { if (inCall) await simpleUser.hangup(); } catch (_) {}
+      try { await simpleUser.unregister(); } catch (_) {}
+      try { await simpleUser.disconnect(); } catch (_) {}
+      simpleUser = null; inCall = false;
+      $('phonePanel').classList.add('hidden');
+      $('connectForm').classList.remove('hidden');
+      $('connectBtn').disabled = false;
+      setReg('', 'Not registered');
+      $('status').classList.add('hidden');
+      log('Disconnected');
+    }
+
+    $('connectBtn').onclick = connect;
+    $('callBtn').onclick = call;
+    $('disconnectBtn').onclick = disconnect;
+    $('enableAudioBtn').onclick = () => {
+      const el = $('remoteAudio');
+      el.muted = false;
+      el.volume = 1.0;
+      el.play()
+        .then(() => log('Audio resumed by user click. paused=' + el.paused))
+        .catch((e) => log('Still blocked: ' + (e && e.message)));
+    };
+
+    // ---- Option B: MicroSIP desktop control ----
+    const MS_SAVE = 'sp_msDest';
+    { const v = localStorage.getItem(MS_SAVE); if (v) $('msDest').value = v; }
+    const msStatus = (m, isErr) => {
+      const el = $('msStatus');
+      el.textContent = m;
+      el.style.color = isErr ? '#e5484d' : '#9aa0ab';
+    };
+    async function msPost(path, body) {
+      const res = await fetch(path, {
+        method: 'POST',
+        headers: body ? { 'Content-Type': 'application/json' } : undefined,
+        body: body ? JSON.stringify(body) : undefined,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+      return data;
+    }
+    $('msCallBtn').onclick = async () => {
+      const number = $('msDest').value.trim();
+      if (!number) { msStatus('Enter a number to dial.', true); return; }
+      localStorage.setItem(MS_SAVE, number);
+      msStatus('Telling MicroSIP to call ' + number + '…');
+      try {
+        await msPost('/api/microsip/call', { number });
+        msStatus('MicroSIP is calling ' + number + '. Check the MicroSIP window.');
+        log('MicroSIP call → ' + number);
+      } catch (e) {
+        msStatus(e.message, true);
+        log('MicroSIP call error: ' + e.message);
+      }
+    };
+    $('msHangupBtn').onclick = async () => {
+      try { await msPost('/api/microsip/hangup'); msStatus('Hung up all MicroSIP calls.'); log('MicroSIP hangup'); }
+      catch (e) { msStatus(e.message, true); }
+    };
+    $('msAnswerBtn').onclick = async () => {
+      try { await msPost('/api/microsip/answer'); msStatus('Answered incoming call in MicroSIP.'); log('MicroSIP answer'); }
+      catch (e) { msStatus(e.message, true); }
+    };
+    $('msConfigBtn').onclick = async () => {
+      msStatus('Writing MicroSIP notification hooks…');
+      try {
+        const r = await msPost('/api/microsip/configure');
+        msStatus('Hooks set. Fully quit MicroSIP (tray → Exit) and reopen it.');
+        log('MicroSIP configured. ini: ' + r.iniPath);
+      } catch (e) {
+        msStatus(e.message, true);
+        log('MicroSIP configure error: ' + e.message);
+      }
+    };
+
+    // Live call events pushed from the server (originating from MicroSIP's hooks).
+    function setMsEvt(state, text) {
+      $('msEvtDot').className = 'dot ' + (state || '');
+      $('msEvtText').textContent = text;
+    }
+    function startEventStream() {
+      const es = new EventSource('/api/microsip/events');
+      es.onopen = () => setMsEvt('ok', 'Events: listening');
+      es.onerror = () => setMsEvt('warn', 'Events: reconnecting…');
+      es.onmessage = (ev) => {
+        let data; try { data = JSON.parse(ev.data); } catch { return; }
+        if (data.type === 'connected' || data.type === undefined) return;
+        const who = data.cid ? ' (' + data.cid + ')' : '';
+        if (data.type === 'start')    { msStatus('MicroSIP: call connected' + who + '.'); }
+        else if (data.type === 'end') { msStatus('MicroSIP: call ended' + who + '.'); }
+        else if (data.type === 'incoming') { msStatus('MicroSIP: incoming call' + who + '.'); }
+        else if (data.type === 'answer')   { msStatus('MicroSIP: call answered' + who + '.'); }
+        log('MicroSIP event: ' + data.type + who);
+      };
+    }
+    startEventStream();
+    window.addEventListener('beforeunload', () => { if (simpleUser) { try { simpleUser.disconnect(); } catch (_) {} } });
+
+    if (typeof SimpleUser !== 'function') {
+      showError('SIP.js failed to load from the CDN (esm.sh). Check your network connection.');
+    } else {
+      log('SIP.js loaded.');
+    }
+  })();
+  </script>
+</body>
+</html>

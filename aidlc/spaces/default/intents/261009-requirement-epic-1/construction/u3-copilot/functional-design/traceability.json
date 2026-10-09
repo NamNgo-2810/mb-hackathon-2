@@ -1,0 +1,32 @@
+{
+  "stage": "functional-design",
+  "unit": "u3-copilot",
+  "upstream_ids": [
+    "AC1.2.1",
+    "AC1.2.2",
+    "AC1.2.3",
+    "AC1.2.4",
+    "AC1.2.5",
+    "AC1.3.1",
+    "AC1.3.2",
+    "AC1.3.3"
+  ],
+  "coverage": [
+    { "id": "AC1.2.1", "status": "OK", "target": "BR2.1, BR2.2, BR3.2, BR4.1" },
+    { "id": "AC1.2.2", "status": "OK", "target": "BR3.1, BR3.3" },
+    { "id": "AC1.2.3", "status": "OK", "target": "BR1.1, BR1.2" },
+    { "id": "AC1.2.4", "status": "OK", "target": "BR5.1, BR5.2" },
+    { "id": "AC1.2.5", "status": "OK", "target": "BR2.3" },
+    { "id": "AC1.3.1", "status": "OK", "target": "BR6.1" },
+    { "id": "AC1.3.2", "status": "OK", "target": "BR6.2" },
+    { "id": "AC1.3.3", "status": "OK", "target": "BR6.2" }
+  ],
+  "reverse": [
+    { "id": "BR1.3", "status": "N/A", "target": "Quy tắc chia đoạn theo trang/mục — bước xử lý nội bộ cho BR2/BR4, không gắn trực tiếp AC" },
+    { "id": "BR4.2", "status": "N/A", "target": "Kiểm chứng trích dẫn với đoạn đã gửi — bảo đảm chất lượng cho AC1.2.1, không phải AC riêng" },
+    { "id": "BR5.3", "status": "N/A", "target": "JSON sai cấu trúc coi như lỗi AI — độ tin cậy NFR3, không có AC riêng của US1.2/US1.3" },
+    { "id": "BR7.1", "status": "N/A", "target": "Nhật ký truy vấn phục vụ OKR (NFR6) — không có AC nghiệm thu người dùng" },
+    { "id": "BR7.2", "status": "N/A", "target": "Kiểm tra đầu vào ở biên (NFR2) — quy tắc kỹ thuật, không có AC riêng" },
+    { "id": "BR7.3", "status": "N/A", "target": "Không log khoá/nội dung nhạy cảm (NFR2) — quy tắc bảo mật, không có AC riêng" }
+  ]
+}

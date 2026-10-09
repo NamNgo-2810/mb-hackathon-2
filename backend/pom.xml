@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.4</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.mb</groupId>
+    <artifactId>call-assistant</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>call-assistant</name>
+    <description>CRM Call Assistant backend: recording download + Vietnamese STT with RM/KH separation</description>
+
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+
+    <dependencies>
+        <!-- REST API -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Bean validation (@Valid on request bodies) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- JPA + persistence -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- BCrypt password hashing only (U6). Boot-managed version via the BOM;
+             deliberately NOT spring-boot-starter-security, which would lock down
+             every endpoint. -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+        </dependency>
+
+        <!-- WebClient (reactive) for upstream recording/STT HTTP calls -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+
+        <!-- PostgreSQL driver (runtime) -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- H2 for a zero-infra local run (demo profile fallback) -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Test: JUnit 5 Jupiter, Mockito, AssertJ, Spring Test, MockMvc.
+             Version is managed by the Spring Boot parent (do not pin). -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <!-- JaCoCo: coverage report + an 80% line-coverage floor for the U1
+                 packages, checked in `verify` (team.md / NFR4). The floor must
+                 never be lowered to make a build pass. Tests for U1 are deferred
+                 to a later pass per the person's request; `prepare-agent` and
+                 `report` run harmlessly with no tests, and `check` with no
+                 instrumented classes in the include set passes until tests land. -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.12</version>
+                <executions>
+                    <execution>
+                        <id>jacoco-prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>BUNDLE</element>
+                                    <includes>
+                                        <include>com.mb.callassistant.lead.*</include>
+                                        <include>com.mb.callassistant.call.*</include>
+                                        <include>com.mb.callassistant.llm.*</include>
+                                        <include>com.mb.callassistant.copilot.*</include>
+                                        <include>com.mb.callassistant.task.*</include>
+                                        <include>com.mb.callassistant.auth.*</include>
+                                        <include>com.mb.callassistant.analysis.*</include>
+                                        <include>com.mb.callassistant.analysis.web.*</include>
+                                        <include>com.mb.callassistant.analysis.web.dto.*</include>
+                                        <include>com.mb.callassistant.service.CallService</include>
+                                        <include>com.mb.callassistant.service.CallPipelineService</include>
+                                        <include>com.mb.callassistant.domain.CallRecord</include>
+                                    </includes>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.80</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

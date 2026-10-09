@@ -1,0 +1,18 @@
+[
+  {
+    "uuid": "01a11bd4-ff74-7bbd-89f6-4d99af7e646b",
+    "slug": "crm-call-assistant",
+    "dirName": "261008-crm-call-assistant",
+    "scope": "refactor",
+    "status": "in-flight",
+    "request": "28a74c23"
+  },
+  {
+    "uuid": "01a11ec3-96de-7074-9840-75444e9b3c40",
+    "slug": "requirement-epic-1",
+    "dirName": "261009-requirement-epic-1",
+    "scope": "classic",
+    "status": "in-flight",
+    "request": "65a2ccf5"
+  }
+]

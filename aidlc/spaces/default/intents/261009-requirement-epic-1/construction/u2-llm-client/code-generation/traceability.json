@@ -1,0 +1,51 @@
+{
+  "stage": "code-generation",
+  "unit": "u2-llm-client",
+  "upstream_ids": [
+    "BR1.1", "BR1.2", "BR2.1", "BR2.2", "BR3.1", "BR3.2",
+    "BR4.1", "BR4.2", "BR5.1", "BR5.2", "BR6.1",
+    "NFR1.1", "NFR1.2", "NFR1.3",
+    "NFR2.1", "NFR2.2", "NFR2.3", "NFR2.4", "NFR2.5", "NFR2.6",
+    "NFR2.7", "NFR2.8", "NFR2.9", "NFR2.10",
+    "NFR3.1", "NFR3.2", "NFR3.3", "NFR3.4", "NFR3.5",
+    "NFR4.1", "NFR7.1"
+  ],
+  "coverage": [
+    { "id": "BR1.1", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/AnthropicLlmClient.java" },
+    { "id": "BR1.2", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/AnthropicLlmClient.java" },
+    { "id": "BR2.1", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/AnthropicLlmClient.java" },
+    { "id": "BR2.2", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/LlmRequestValidator.java" },
+    { "id": "BR3.1", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/AnthropicLlmClient.java" },
+    { "id": "BR3.2", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/AnthropicLlmClient.java" },
+    { "id": "BR4.1", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/AnthropicLlmClient.java" },
+    { "id": "BR4.2", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/JsonResponses.java" },
+    { "id": "BR5.1", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/MessageBuilder.java" },
+    { "id": "BR5.2", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/MessageBuilder.java" },
+    { "id": "BR6.1", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/MockLlmClient.java" },
+
+    { "id": "NFR1.1", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/AnthropicLlmClient.java" },
+    { "id": "NFR1.2", "status": "OK", "target": "backend/pom.xml" },
+    { "id": "NFR1.3", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/AnthropicLlmClient.java" },
+
+    { "id": "NFR2.1", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/config/AppProperties.java" },
+    { "id": "NFR2.2", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/AnthropicLlmClient.java" },
+    { "id": "NFR2.3", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/AnthropicLlmClient.java" },
+    { "id": "NFR2.4", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/AnthropicLlmClient.java" },
+    { "id": "NFR2.5", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/AnthropicLlmClient.java" },
+    { "id": "NFR2.6", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/MessageBuilder.java" },
+    { "id": "NFR2.7", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/JsonResponses.java" },
+    { "id": "NFR2.8", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/LlmRequestValidator.java" },
+    { "id": "NFR2.9", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/AnthropicLlmClient.java" },
+    { "id": "NFR2.10", "status": "OK", "target": "backend/pom.xml" },
+
+    { "id": "NFR3.1", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/AnthropicLlmClient.java" },
+    { "id": "NFR3.2", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/AnthropicLlmClient.java" },
+    { "id": "NFR3.3", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/JsonResponses.java" },
+    { "id": "NFR3.4", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/LlmClient.java" },
+    { "id": "NFR3.5", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/llm/MessageBuilder.java" },
+
+    { "id": "NFR4.1", "status": "OK", "target": "backend/pom.xml" },
+
+    { "id": "NFR7.1", "status": "OK", "target": "backend/README.md" }
+  ]
+}

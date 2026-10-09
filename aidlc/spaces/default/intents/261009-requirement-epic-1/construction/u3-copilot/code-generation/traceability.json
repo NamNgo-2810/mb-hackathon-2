@@ -1,0 +1,51 @@
+{
+  "stage": "code-generation",
+  "unit": "u3-copilot",
+  "upstream_ids": [
+    "AC1.2.1", "AC1.2.2", "AC1.2.3", "AC1.2.4", "AC1.2.5",
+    "AC1.3.1", "AC1.3.2", "AC1.3.3",
+    "BR1.1", "BR1.2", "BR1.3",
+    "BR2.1", "BR2.2", "BR2.3",
+    "BR3.1", "BR3.2", "BR3.3",
+    "BR4.1", "BR4.2",
+    "BR5.1", "BR5.2", "BR5.3",
+    "BR6.1", "BR6.2",
+    "BR7.1", "BR7.2", "BR7.3"
+  ],
+  "coverage": [
+    { "id": "AC1.2.1", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/CopilotService.java" },
+    { "id": "AC1.2.2", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/CopilotService.java" },
+    { "id": "AC1.2.3", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/PolicyDocumentLoader.java" },
+    { "id": "AC1.2.4", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/CopilotService.java" },
+    { "id": "AC1.2.5", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/CopilotPromptBuilder.java" },
+    { "id": "AC1.3.1", "status": "OK", "target": "public/js/copilot.js" },
+    { "id": "AC1.3.2", "status": "OK", "target": "public/js/copilot.js" },
+    { "id": "AC1.3.3", "status": "OK", "target": "public/js/copilot.js" },
+    { "id": "BR1.1", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/PolicyDocumentLoader.java" },
+    { "id": "BR1.2", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/PolicyDocumentLoader.java" },
+    { "id": "BR1.3", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/PolicyDocumentLoader.java" },
+    { "id": "BR2.1", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/TextNormalizer.java" },
+    { "id": "BR2.2", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/ChunkSearcher.java" },
+    { "id": "BR2.3", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/CopilotPromptBuilder.java" },
+    { "id": "BR3.1", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/CopilotService.java" },
+    { "id": "BR3.2", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/CitationVerifier.java" },
+    { "id": "BR3.3", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/CopilotMessages.java" },
+    { "id": "BR4.1", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/Citation.java" },
+    { "id": "BR4.2", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/CitationVerifier.java" },
+    { "id": "BR5.1", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/CopilotService.java" },
+    { "id": "BR5.2", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/web/ApiExceptionHandler.java" },
+    { "id": "BR5.3", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/CopilotService.java" },
+    { "id": "BR6.1", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/CitationVerifier.java" },
+    { "id": "BR6.2", "status": "OK", "target": "public/js/copilot.js" },
+    { "id": "BR7.1", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/CopilotService.java" },
+    { "id": "BR7.2", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/web/dto/CopilotAskRequest.java" },
+    { "id": "BR7.3", "status": "OK", "target": "backend/src/main/java/com/mb/callassistant/copilot/CopilotService.java" }
+  ],
+  "reverse": [
+    { "id": "AC1.2.1", "status": "OK", "target": "CopilotService.ask nhánh có ngữ cảnh + CitationVerifier (lãi suất 12 tháng, trích dẫn)" },
+    { "id": "AC1.2.2", "status": "OK", "target": "CopilotService.ask nhánh rỗng → CopilotMessages.NOT_FOUND" },
+    { "id": "AC1.2.3", "status": "OK", "target": "PolicyDocumentLoader bỏ qua file thiếu metadata/rỗng + ghi log" },
+    { "id": "AC1.2.4", "status": "OK", "target": "CopilotService bắt LlmException → AiException → 502 AI_ERROR" },
+    { "id": "AC1.2.5", "status": "OK", "target": "CopilotPromptBuilder đặt tài liệu trong khối DATA + LlmClient MessageBuilder bọc DATA fence" }
+  ]
+}

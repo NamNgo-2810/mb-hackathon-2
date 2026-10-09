@@ -1,0 +1,15 @@
+{
+  "stage_slug": "practices-discovery",
+  "space": "default",
+  "intent": "261009-requirement-epic-1",
+  "selections": [
+    {
+      "candidate_id": "u1",
+      "type": "learning",
+      "scope": "project",
+      "heading": "## Corrections",
+      "text": "ALWAYS respond in Vietnamese (conversation language: Vietnamese) - luôn trả lời bằng tiếng Việt",
+      "source": "user_addition"
+    }
+  ]
+}

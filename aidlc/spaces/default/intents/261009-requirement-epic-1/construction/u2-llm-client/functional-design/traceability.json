@@ -1,0 +1,19 @@
+{
+  "stage": "functional-design",
+  "unit": "u2-llm-client",
+  "upstream_ids": [],
+  "coverage": [],
+  "reverse": [
+    { "id": "BR1.1", "status": "N/A", "target": "U2 không có story riêng (unit-of-work-story-map: chỉ 'Cũng chạm'). Quy tắc bảo mật NFR2 hỗ trợ AC1.2.4 (U3) và AC2.2.3 (U4)." },
+    { "id": "BR1.2", "status": "N/A", "target": "Quy tắc log an toàn (NFR2, NFR6); không có AC riêng ở U2." },
+    { "id": "BR2.1", "status": "N/A", "target": "Lỗi NOT_CONFIGURED — hỗ trợ dự phòng AC1.2.4 (U3) và AC2.4.3 (U4)." },
+    { "id": "BR2.2", "status": "N/A", "target": "Kiểm tra đầu vào ở biên thư viện — quy tắc kỹ thuật, không có AC riêng." },
+    { "id": "BR3.1", "status": "N/A", "target": "Timeout — hỗ trợ AC1.2.4 (U3, 30 giây) và NFR1." },
+    { "id": "BR3.2", "status": "N/A", "target": "Không tự thử lại — việc thử lại thuộc U4 (AC2.2.3) và U3." },
+    { "id": "BR4.1", "status": "N/A", "target": "Phân loại lỗi theo hợp đồng I3 — không có AC riêng ở U2." },
+    { "id": "BR4.2", "status": "N/A", "target": "Kiểm tra JSON đọc được — hỗ trợ AC2.2.3 (U4)." },
+    { "id": "BR5.1", "status": "N/A", "target": "Tách dữ liệu khỏi chỉ dẫn — hỗ trợ AC1.2.5 (U3)." },
+    { "id": "BR5.2", "status": "N/A", "target": "Prompt caching (ADR-004) — tối ưu chi phí/độ trễ, không có AC." },
+    { "id": "BR6.1", "status": "N/A", "target": "Bản giả lập cho test (NFR4) và demo khi chưa có khoá — không có AC riêng." }
+  ]
+}

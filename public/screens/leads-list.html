@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Danh sách tiềm năng bán - MB Advance CRM</title>
+  <script src="/js/tailwind-config.js"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css" />
+</head>
+<body class="bg-[#f0f2f7] text-[#1e293b] font-sans antialiased text-xs h-screen flex overflow-hidden">
+  <!-- Left sidebar (khớp S1) -->
+  <aside class="w-20 bg-white border-r border-slate-200 flex flex-col items-center py-3 shrink-0 z-20 shadow-sm h-full" data-purpose="main-navigation">
+    <nav class="flex flex-col items-center w-full px-1.5 gap-1">
+      <a class="flex flex-col items-center justify-center w-full py-1.5 px-1 text-white bg-[#306bf3] rounded-lg font-semibold" href="#">
+        <i class="ph ph-currency-dollar-simple text-xl mb-0.5 text-white"></i>
+        <span class="text-[10px] font-semibold leading-tight text-center">Quản lý bán</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <div class="flex-1 flex flex-col h-screen overflow-hidden">
+    <div class="h-11 bg-white border-b border-slate-200 px-5 flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-3">
+        <h2 class="text-sm font-bold text-slate-800">Danh sách tiềm năng bán</h2>
+        <span class="text-slate-300">|</span>
+        <span class="text-[11px] text-slate-500" data-testid="current-rm">...</span>
+      </div>
+      <button id="logout-button" class="flex items-center gap-1 px-2 py-1 text-slate-600 bg-slate-50 border border-slate-200 rounded text-[10.5px] hover:bg-slate-100"
+              data-testid="logout-button">
+        <i class="ph ph-sign-out text-xs text-blue-600" aria-hidden="true"></i><span>Đăng xuất</span>
+      </button>
+    </div>
+
+    <div id="error-banner" class="hidden bg-red-50 border-b border-red-200 text-red-700 px-5 py-2 text-[11px]" data-testid="error-banner"></div>
+
+    <div class="flex-1 p-4 overflow-hidden bg-[#f4f6fa]">
+      <section class="bg-white rounded-lg border border-slate-200 shadow-xs h-full flex flex-col overflow-hidden">
+        <div class="px-3 py-2 border-b border-slate-100 flex items-center justify-between shrink-0">
+          <h4 class="font-bold text-slate-800 text-xs">Tiềm năng bán của tôi</h4>
+          <span class="text-[10.5px] text-slate-400" data-testid="lead-count"></span>
+        </div>
+        <div id="lead-list" class="flex-1 overflow-y-auto p-2.5 space-y-2" data-testid="lead-list" data-purpose="lead-list"></div>
+      </section>
+    </div>
+  </div>
+
+  <script type="module">
+    import { getMe, listLeads, logout } from '/js/api.js';
+    import { escapeHtml, stageLabel, priorityLabel, formatDateTime } from '/js/screens.js';
+
+    function showError(msg) {
+      const el = document.getElementById('error-banner');
+      el.textContent = msg || '';
+      el.classList.toggle('hidden', !msg);
+    }
+
+    function slaLabel(iso) {
+      if (!iso) return 'Chưa có hạn SLA';
+      const due = new Date(iso);
+      if (Number.isNaN(due.getTime())) return escapeHtml(iso);
+      const ms = due.getTime() - Date.now();
+      const days = Math.ceil(ms / (24 * 3600 * 1000));
+      if (days < 0) return `Quá hạn ${Math.abs(days)} ngày`;
+      if (days === 0) return 'Đến hạn hôm nay';
+      return `Còn ${days} ngày`;
+    }
+
+    function priorityBadgeClass(priority) {
+      switch (priority) {
+        case 'KHAI_THAC_NGAY': return 'bg-red-50 text-red-700 border-red-200';
+        case 'HOT_LEAD': return 'bg-orange-50 text-orange-700 border-orange-200';
+        default: return 'bg-slate-50 text-slate-600 border-slate-200';
+      }
+    }
+
+    function renderLeads(list) {
+      const host = document.getElementById('lead-list');
+      const count = document.querySelector('[data-testid="lead-count"]');
+      host.innerHTML = '';
+
+      if (!list || list.length === 0) {
+        count.textContent = '';
+        const empty = document.createElement('div');
+        empty.className = 'flex flex-col items-center justify-center text-slate-400 py-10 gap-2';
+        empty.setAttribute('data-testid', 'lead-empty');
+        empty.innerHTML =
+          `<i class="ph ph-tray text-2xl" aria-hidden="true"></i>`
+          + `<p class="text-[12px]">Chưa có tiềm năng bán</p>`;
+        host.appendChild(empty);
+        return;
+      }
+
+      count.textContent = `${list.length} tiềm năng bán`;
+      for (const lead of list) {
+        const card = document.createElement('a');
+        card.href = `/screens/1-chi-tiet-tiem-nang-ban.html?leadId=${encodeURIComponent(lead.leadId)}`;
+        card.className = 'block border border-slate-200 rounded-md p-2.5 bg-white hover:border-[#306bf3] hover:shadow-xs transition-all';
+        card.setAttribute('data-testid', `lead-row-${escapeHtml(lead.leadId)}`);
+        card.setAttribute('aria-label', `Mở chi tiết tiềm năng bán ${escapeHtml(lead.leadCode || '')}`);
+        card.innerHTML =
+          `<div class="flex items-center justify-between gap-2">
+             <span class="font-bold text-[#2e5ef3] text-[12px] truncate">${escapeHtml(lead.leadCode || '--')}</span>
+             <span class="inline-block text-[10px] font-semibold px-2 py-0.5 rounded border ${priorityBadgeClass(lead.priority)}">${escapeHtml(priorityLabel(lead.priority))}</span>
+           </div>
+           <div class="mt-1.5 text-[10.5px] space-y-1">
+             <div class="flex justify-between"><span class="text-slate-400">Khách hàng</span><span class="text-slate-700 truncate ml-2">${escapeHtml(lead.customerName || '--')}</span></div>
+             <div class="flex justify-between"><span class="text-slate-400">Sản phẩm</span><span class="text-slate-700 truncate ml-2">${escapeHtml(lead.productInterest || '--')}</span></div>
+             <div class="flex justify-between"><span class="text-slate-400">Nguồn</span><span class="text-slate-700">${escapeHtml(lead.source || '--')}</span></div>
+             <div class="flex justify-between"><span class="text-slate-400">SLA</span><span class="text-slate-700">${escapeHtml(slaLabel(lead.slaDueAt))}</span></div>
+             <div class="flex justify-between items-center">
+               <span class="text-slate-400">Điểm xếp hạng</span>
+               <span class="font-semibold text-emerald-700">${lead.rankScore == null ? '--' : escapeHtml(lead.rankScore)}/10</span>
+             </div>
+             <div class="flex justify-between"><span class="text-slate-400">Giai đoạn</span><span class="text-slate-700">${escapeHtml(stageLabel(lead.stage))}</span></div>
+           </div>`;
+        host.appendChild(card);
+      }
+    }
+
+    async function init() {
+      try {
+        const me = await getMe();
+        const el = document.querySelector('[data-testid="current-rm"]');
+        if (el) el.textContent = me.displayName || '';
+      } catch (_) { /* non-blocking; 401 tự chuyển hướng trong api.js */ }
+
+      try {
+        const leads = await listLeads();
+        renderLeads(leads);
+      } catch (e) {
+        if (e.status !== 401) showError(e.message || 'Không tải được danh sách tiềm năng bán');
+      }
+
+      document.getElementById('logout-button').addEventListener('click', async () => {
+        try { await logout(); } finally { window.location.href = '/screens/0-dang-nhap.html'; }
+      });
+    }
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng nhập - MB Advance CRM</title>
+  <!-- Tailwind CSS v3 + plugins (theo hệ thiết kế mockup S1) -->
+  <script src="/js/tailwind-config.js"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Phosphor Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css" />
+</head>
+<body class="bg-[#f0f2f7] text-[#1e293b] font-sans antialiased text-xs h-screen flex items-center justify-center">
+
+  <main class="w-full max-w-sm px-6">
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6" data-purpose="login-card">
+      <!-- Logo / tiêu đề -->
+      <div class="flex flex-col items-center gap-2 mb-5">
+        <div class="w-12 h-12 rounded-xl bg-[#306bf3] flex items-center justify-center text-white shadow-sm">
+          <i class="ph-fill ph-currency-dollar-simple text-2xl"></i>
+        </div>
+        <h1 class="text-sm font-bold text-slate-800">MB Advance CRM</h1>
+        <p class="text-[11px] text-slate-500">Đăng nhập để quản lý tiềm năng bán</p>
+      </div>
+
+      <!-- Dòng lỗi (icon + chữ, không chỉ dựa màu) -->
+      <div id="login-error"
+           class="hidden items-center gap-1.5 bg-red-50 border border-red-200 text-red-700 rounded-md px-3 py-2 mb-3 text-[11px]"
+           role="alert" aria-live="assertive" data-testid="login-error">
+        <i class="ph-fill ph-warning-circle text-sm shrink-0" aria-hidden="true"></i>
+        <span data-testid="login-error-text"></span>
+      </div>
+
+      <form id="login-form" class="space-y-3" novalidate data-testid="login-form">
+        <div>
+          <label for="login-username" class="block text-[11px] font-semibold text-slate-600 mb-1">
+            Tên đăng nhập
+          </label>
+          <input id="login-username" name="username" type="text" autocomplete="username" required
+                 class="w-full rounded-md border border-slate-300 px-3 py-2 text-xs focus:border-[#306bf3] focus:ring-1 focus:ring-[#306bf3]"
+                 placeholder="Ví dụ: rm.a" data-testid="login-username" />
+        </div>
+
+        <div>
+          <label for="login-password" class="block text-[11px] font-semibold text-slate-600 mb-1">
+            Mật khẩu
+          </label>
+          <input id="login-password" name="password" type="password" autocomplete="current-password" required
+                 class="w-full rounded-md border border-slate-300 px-3 py-2 text-xs focus:border-[#306bf3] focus:ring-1 focus:ring-[#306bf3]"
+                 placeholder="••••••••" data-testid="login-password" />
+        </div>
+
+        <button id="login-submit" type="submit"
+                class="w-full bg-[#306bf3] hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-xs px-4 py-2.5 rounded-md flex items-center justify-center gap-2 shadow-sm transition-all"
+                data-testid="login-submit">
+          <i id="login-spinner" class="ph ph-circle-notch animate-spin text-sm hidden" aria-hidden="true"></i>
+          <span id="login-submit-label">Đăng nhập</span>
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <script type="module">
+    import { login, getAuthToken } from '/js/api.js';
+    import { escapeHtml } from '/js/screens.js';
+
+    const form = document.getElementById('login-form');
+    const submitBtn = document.getElementById('login-submit');
+    const spinner = document.getElementById('login-spinner');
+    const errorBox = document.getElementById('login-error');
+    const errorText = document.querySelector('[data-testid="login-error-text"]');
+
+    // Nếu đã có token hợp lệ sẵn, đi thẳng tới danh sách lead.
+    if (getAuthToken()) {
+      window.location.href = '/screens/leads-list.html';
+    }
+
+    function showError(msg) {
+      errorText.textContent = msg || 'Sai tên đăng nhập hoặc mật khẩu';
+      errorBox.classList.remove('hidden');
+      errorBox.classList.add('flex');
+    }
+
+    function clearError() {
+      errorBox.classList.add('hidden');
+      errorBox.classList.remove('flex');
+      errorText.textContent = '';
+    }
+
+    function setSubmitting(on) {
+      submitBtn.disabled = on;
+      spinner.classList.toggle('hidden', !on);
+      document.getElementById('login-submit-label').textContent = on ? 'Đang đăng nhập…' : 'Đăng nhập';
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearError();
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value;
+      if (!username || !password) {
+        showError('Vui lòng nhập tên đăng nhập và mật khẩu');
+        return;
+      }
+      setSubmitting(true);
+      try {
+        await login(username, password);
+        window.location.href = '/screens/leads-list.html';
+      } catch (err) {
+        // 401 → thông điệp duy nhất; 400 → nhắc nhập đủ trường (BR1.2).
+        if (err.status === 400) {
+          showError('Vui lòng nhập tên đăng nhập và mật khẩu');
+        } else {
+          showError(escapeHtml(err.message) || 'Sai tên đăng nhập hoặc mật khẩu');
+        }
+        setSubmitting(false);
+      }
+    });
+  </script>
+</body>
+</html>

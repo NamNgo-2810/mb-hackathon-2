@@ -1,0 +1,46 @@
+# Local infra for the CRM Call Assistant demo (FR7.2).
+# Brings up Postgres for the backend's demo DB. A Whisper STT container is
+# provided but commented out — uncomment it and point STT_BASE_URL at it to run
+# speech-to-text locally.
+#
+#   docker compose up -d        # start Postgres (+ Whisper if enabled)
+#   docker compose down         # stop
+#   docker compose down -v      # stop and wipe the DB volume
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: callassistant-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: callassistant
+      POSTGRES_USER: callassistant
+      # Demo-only default; override with POSTGRES_PASSWORD in your shell/.env.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-callassistant}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U callassistant -d callassistant"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # --- Optional: local Whisper-compatible STT server --------------------------
+  # Uncomment to run Vietnamese STT locally. Any image exposing the
+  # OpenAI/Whisper `POST /v1/audio/transcriptions` contract works; then set
+  # STT_BASE_URL=http://localhost:9000 for the backend.
+  #
+  whisper:
+    image: onerahmet/openai-whisper-asr-webservice:latest
+    container_name: callassistant-whisper
+    restart: unless-stopped
+    environment:
+      ASR_MODEL: small          # base/small/medium — larger = better Vietnamese, slower
+      ASR_ENGINE: openai_whisper
+    ports:
+      - "9000:9000"
+
+volumes:
+  pgdata:

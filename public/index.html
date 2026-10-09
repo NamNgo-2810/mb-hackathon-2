@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FreeSWITCH Call Test</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: grid; place-items: center;
+    font-family: system-ui, Segoe UI, Roboto, sans-serif;
+    background: #0f1115; color: #e8eaed; padding: 24px;
+  }
+  .card {
+    width: 380px; max-width: 100%; background: #171a21;
+    border: 1px solid #2a2f3a; border-radius: 12px; padding: 24px;
+  }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  p.sub { margin: 0 0 20px; color: #9aa0ab; font-size: 13px; }
+  label { display: block; font-size: 13px; color: #9aa0ab; margin-bottom: 14px; }
+  input {
+    display: block; width: 100%; margin-top: 6px; padding: 10px 12px;
+    border-radius: 8px; border: 1px solid #2a2f3a; background: #1f2430;
+    color: #e8eaed; font-size: 15px;
+  }
+  input:focus { outline: none; border-color: #4c8bf5; }
+  .row { display: flex; gap: 12px; }
+  .row label { flex: 1; }
+  button {
+    width: 100%; padding: 11px; border: 0; border-radius: 8px; cursor: pointer;
+    background: #4c8bf5; color: #fff; font-size: 15px; margin-top: 4px;
+  }
+  button:hover { background: #3a76db; }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  button.danger { background: #e5484d; }
+  button.danger:hover { background: #c93b40; }
+  .status {
+    margin-top: 18px; padding: 14px; border-radius: 10px;
+    background: #1f2430; border: 1px solid #2a2f3a; font-size: 14px;
+  }
+  .status .big { font-weight: 600; margin-bottom: 4px; }
+  .status .muted { color: #9aa0ab; font-size: 13px; }
+  .error { color: #e5484d; font-size: 13px; margin: 10px 0 0; }
+  .hint { color: #9aa0ab; font-size: 12px; margin-top: 16px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Place a test call</h1>
+    <p class="sub">FreeSWITCH default users are 1000–1019. The "from" phone rings first.</p>
+
+    <form id="dial">
+      <div class="row">
+        <label>From (rings first)
+          <input id="from" inputmode="tel" value="1000" />
+        </label>
+        <label>To
+          <input id="to" inputmode="tel" value="1001" />
+        </label>
+      </div>
+      <button id="callBtn" type="submit">Call</button>
+    </form>
+
+    <p id="error" class="error" hidden></p>
+    <div id="status" class="status" hidden></div>
+
+    <p class="hint">Answer the "from" phone when it rings, then the "to" phone connects.</p>
+  </div>
+
+<script>
+const EXT_RE = /^[A-Za-z0-9_.+*#-]{1,32}$/;
+const form = document.getElementById('dial');
+const fromEl = document.getElementById('from');
+const toEl = document.getElementById('to');
+const callBtn = document.getElementById('callBtn');
+const errorEl = document.getElementById('error');
+const statusEl = document.getElementById('status');
+
+let pollTimer = null, tickTimer = null, startedAt = 0, currentUuid = null;
+const MAX_POLL_MS = 2 * 60 * 60 * 1000; // 2h safety cap
+
+function showError(msg) { errorEl.textContent = msg; errorEl.hidden = !msg; }
+function mmss(sec) {
+  const m = String(Math.floor(sec / 60)).padStart(2, '0');
+  const s = String(sec % 60).padStart(2, '0');
+  return m + ':' + s;
+}
+function stopTimers() {
+  clearInterval(pollTimer); clearInterval(tickTimer);
+  pollTimer = tickTimer = null;
+}
+
+function renderStatus(state) {
+  statusEl.hidden = false;
+  const secs = Math.floor((Date.now() - startedAt) / 1000);
+  if (state === 'dialing') {
+    statusEl.innerHTML =
+      '<div class="big">Answer your phone to connect</div>' +
+      '<div class="muted">Calling… ' + mmss(secs) + '</div>';
+    addHangup();
+  } else if (state === 'active') {
+    statusEl.innerHTML =
+      '<div class="big">Call in progress</div>' +
+      '<div class="muted">' + mmss(secs) + '</div>';
+    addHangup();
+  } else if (state === 'ended') {
+    statusEl.innerHTML =
+      '<div class="big">Call ended</div>' +
+      '<div class="muted">If it was never answered, it may have timed out after ~30s.</div>';
+    callBtn.disabled = false; callBtn.textContent = 'Call';
+  }
+}
+
+function addHangup() {
+  const b = document.createElement('button');
+  b.className = 'danger'; b.textContent = 'Hang up';
+  b.style.marginTop = '12px';
+  b.onclick = hangup;
+  statusEl.appendChild(b);
+}
+
+async function hangup() {
+  if (!currentUuid) return;
+  try { await fetch('/api/call/' + encodeURIComponent(currentUuid), { method: 'DELETE' }); }
+  catch (_) {}
+  stopTimers();
+  renderStatus('ended');
+}
+
+async function poll() {
+  if (Date.now() - startedAt > MAX_POLL_MS) { stopTimers(); renderStatus('ended'); return; }
+  try {
+    const res = await fetch('/api/call/' + encodeURIComponent(currentUuid));
+    if (res.status === 404) { stopTimers(); renderStatus('ended'); return; }
+    const data = await res.json();
+    if (data.status === 'ended') { stopTimers(); renderStatus('ended'); }
+    else if (data.status === 'active') { renderStatus('active'); }
+  } catch (_) { /* transient, keep polling */ }
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  showError('');
+  const from = fromEl.value.trim(), to = toEl.value.trim();
+  if (!EXT_RE.test(from) || !EXT_RE.test(to)) {
+    showError('Enter valid extensions (letters, digits, _ . + * # -).');
+    return;
+  }
+  callBtn.disabled = true; callBtn.textContent = 'Calling…';
+  stopTimers(); currentUuid = null;
+
+  try {
+    const res = await fetch('/api/call', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from, to }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      showError(data.error || 'Could not place the call.');
+      callBtn.disabled = false; callBtn.textContent = 'Call';
+      return;
+    }
+    currentUuid = data.uuid;
+    startedAt = Date.now();
+    renderStatus('dialing');
+    pollTimer = setInterval(poll, 2000);
+    tickTimer = setInterval(() => {
+      const big = statusEl.querySelector('.muted');
+      // Re-render keeps the timer and hang-up button in sync.
+      const state = statusEl.querySelector('.big')?.textContent.includes('progress') ? 'active' : 'dialing';
+      renderStatus(state);
+    }, 1000);
+  } catch (err) {
+    showError('Network error. Is the server running?');
+    callBtn.disabled = false; callBtn.textContent = 'Call';
+  }
+});
+
+window.addEventListener('beforeunload', stopTimers);
+</script>
+</body>
+</html>

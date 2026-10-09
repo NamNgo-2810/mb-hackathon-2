@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thực hiện cuộc gọi - MB Advance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        colors: { mb: { blue: '#002896', lightBlue: '#1B4DFF', red: '#DA251D', dark: '#0A1128', grayBg: '#F4F6F9', border: '#E2E8F0', accent: '#00A3FF' } },
+        fontFamily: { sans: ['Inter', 'sans-serif'] },
+      } },
+    };
+  </script>
+  <style> body { font-family: 'Inter', sans-serif; } </style>
+</head>
+<body class="flex flex-row h-screen w-full bg-[#F4F6F9] text-slate-800 antialiased">
+  <!-- Left sidebar -->
+  <aside class="w-[80px] bg-white border-r border-slate-200 flex flex-col items-center py-4 text-slate-700 shrink-0 z-20 shadow-xs">
+    <nav class="flex flex-col gap-4 w-full items-center">
+      <a href="#" class="flex flex-col items-center justify-center w-full py-2 px-1 rounded-xl bg-blue-50 text-blue-700 border border-blue-200" title="AI Sales">
+        <i class="fa-solid fa-wand-magic-sparkles text-base text-blue-600 mb-1"></i>
+        <span class="text-[9px] text-center font-bold leading-none text-blue-700">AI Sales</span>
+      </a>
+    </nav>
+  </aside>
+
+  <main class="flex-1 flex flex-col h-screen overflow-hidden bg-[#F4F6F9]">
+    <!-- In-call control header -->
+    <section class="h-[52px] bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0 shadow-sm">
+      <div class="flex items-center gap-3">
+        <button class="px-2.5 py-1 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md flex items-center gap-1.5" data-testid="back-button" onclick="history.back()">
+          <i class="fa-solid fa-arrow-left text-[11px]"></i>Quay lại
+        </button>
+        <div class="h-4 w-[1px] bg-slate-200"></div>
+        <div class="flex items-center gap-2.5">
+          <h1 class="text-xs font-bold text-slate-800">Thực hiện cuộc gọi</h1>
+          <span class="text-slate-300 text-xs">|</span>
+          <span class="text-xs font-medium text-slate-600"><span class="text-slate-400 font-normal">TNB:</span> <strong class="font-semibold text-slate-800" data-testid="call-lead-code">...</strong></span>
+          <span id="call-status-pill" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200" data-testid="call-status">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>Đang gọi
+          </span>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-slate-700 font-mono text-xs font-semibold">
+          <i class="fa-regular fa-clock text-blue-600"></i>
+          <span id="call-timer" data-testid="call-timer">00:00</span>
+        </div>
+        <button id="end-call-button" data-testid="end-call-button"
+                class="px-3.5 py-1.5 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white rounded-md text-xs font-semibold flex items-center gap-1.5 shadow-sm">
+          <i class="fa-solid fa-phone-slash text-xs"></i>Kết thúc
+        </button>
+      </div>
+    </section>
+
+    <div id="error-banner" class="hidden bg-red-50 border-b border-red-200 text-red-700 px-6 py-2 text-[11px]" data-testid="error-banner"></div>
+
+    <!-- Workspace: 2-block split -->
+    <div class="flex-1 p-4 grid grid-cols-12 gap-4 overflow-hidden">
+      <!-- Block 1: customer / lead / history -->
+      <section class="col-span-5 flex flex-col bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="bg-slate-50/70 border-b border-slate-200 px-4 pt-3 shrink-0">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700">thông tin tiềm năng bán</h2>
+          </div>
+          <div class="flex items-center gap-2 -mb-[1px]" role="tablist">
+            <button class="tab-btn px-3.5 py-2 text-xs font-semibold text-blue-700 border-b-2 border-blue-600 bg-white rounded-t-lg flex items-center gap-1.5" data-tab="info" data-testid="tab-info"><i class="fa-solid fa-user-check text-blue-600"></i>Thông tin KH</button>
+            <button class="tab-btn px-3 py-2 text-xs font-medium text-slate-600 border-b-2 border-transparent rounded-t-lg flex items-center gap-1.5" data-tab="lead" data-testid="tab-lead"><i class="fa-solid fa-bullseye text-slate-400"></i>Chi tiết TNB</button>
+            <button class="tab-btn px-3 py-2 text-xs font-medium text-slate-600 border-b-2 border-transparent rounded-t-lg flex items-center gap-1.5" data-tab="history" data-testid="tab-history"><i class="fa-solid fa-clock-rotate-left text-slate-400"></i>Lịch sử cuộc gọi</button>
+          </div>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 space-y-4">
+          <div data-tab-panel="info">
+            <div class="bg-white rounded-lg border border-slate-200 p-3.5">
+              <h3 class="text-sm font-bold text-slate-900" data-testid="s2-customer-name">...</h3>
+              <div class="grid grid-cols-2 gap-2.5 mt-3 pt-3 border-t border-slate-100 text-xs">
+                <div><span class="text-slate-400 block">SĐT</span><span class="font-semibold" data-testid="s2-customer-phone"></span></div>
+                <div><span class="text-slate-400 block">Nghề nghiệp</span><span class="font-semibold" data-testid="s2-customer-occupation"></span></div>
+                <div><span class="text-slate-400 block">Thu nhập ước tính</span><span class="font-semibold text-emerald-700" data-testid="s2-customer-income"></span></div>
+                <div><span class="text-slate-400 block">Địa chỉ</span><span class="font-semibold truncate" data-testid="s2-customer-address"></span></div>
+              </div>
+            </div>
+          </div>
+          <div data-tab-panel="lead" class="hidden">
+            <div class="bg-white rounded-lg border border-slate-200 p-3.5 text-xs space-y-2">
+              <div class="flex justify-between"><span class="text-slate-500">Mã TNB:</span><span class="font-mono font-bold" data-testid="s2-lead-code"></span></div>
+              <div class="flex justify-between"><span class="text-slate-500">Sản phẩm quan tâm:</span><span class="font-bold text-blue-700" data-testid="s2-lead-product"></span></div>
+              <div class="text-slate-700 whitespace-pre-line pt-2 border-t border-slate-100" data-testid="s2-lead-content"></div>
+            </div>
+          </div>
+          <div data-tab-panel="history" class="hidden">
+            <div id="s2-activity-list" class="space-y-2" data-testid="s2-activity-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Block 2: AI Sales Knowledge (Copilot U3) -->
+      <section class="col-span-7 flex flex-col bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="h-[52px] bg-gradient-to-r from-blue-50/80 via-white to-indigo-50/50 border-b border-slate-200 px-5 flex items-center justify-between shrink-0">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center shadow-xs"><i class="fa-solid fa-wand-magic-sparkles text-sm"></i></div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-sm font-bold text-slate-900 leading-tight">AI Sales Knowledge</h2>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700 border border-blue-200"><i class="fa-solid fa-bolt text-[9px] mr-0.5"></i> Copilot Active</span>
+              </div>
+              <p class="text-[11px] text-slate-500 leading-tight mt-0.5">Trợ lý tra cứu chính sách &amp; sản phẩm</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inner 2-column workspace: left search history + right chat workspace -->
+        <div class="flex-1 flex overflow-hidden" data-testid="copilot-panel" data-purpose="copilot-slot">
+
+          <!-- Left sub-column: lịch sử tra cứu -->
+          <div class="w-[210px] bg-slate-50/60 border-r border-slate-200 flex flex-col shrink-0 p-3">
+            <button type="button" data-testid="copilot-new-chat"
+                    class="w-full py-2 px-3 bg-white hover:bg-blue-50 border border-blue-200 text-blue-700 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 shadow-2xs transition-colors mb-3">
+              <i class="fa-solid fa-plus text-[10px]"></i>Cuộc trò chuyện mới
+            </button>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2 px-1">Lịch sử tra cứu</span>
+            <div class="flex-1 overflow-y-auto space-y-1.5 pr-1" data-testid="copilot-history"></div>
+            <div class="pt-2 border-t border-slate-200 text-[10px] text-slate-400 text-center">Tài liệu chính sách MB</div>
+          </div>
+
+          <!-- Right sub-column: khối hỏi–đáp -->
+          <div class="flex-1 flex flex-col bg-white overflow-hidden">
+            <div class="flex-1 overflow-y-auto p-5 space-y-4">
+              <!-- Lỗi chỉ trong panel (BR5.2) -->
+              <div class="hidden bg-red-50 border border-red-200 text-red-700 rounded-lg px-3 py-2 text-[11px]" data-testid="copilot-error" role="alert" aria-live="polite"></div>
+
+              <!-- Câu trả lời + nguồn -->
+              <div class="bg-slate-50 border border-slate-200/90 rounded-2xl rounded-tl-sm p-4 text-xs shadow-2xs space-y-3">
+                <div class="font-medium text-slate-800 leading-relaxed" data-testid="copilot-answer" aria-live="polite"></div>
+                <div class="space-y-1.5 hidden" data-testid="copilot-citations"></div>
+              </div>
+
+              <!-- Gợi ý câu hỏi tiếp theo -->
+              <div class="pt-1">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-2">Gợi ý câu hỏi tiếp theo</span>
+                <div class="flex flex-wrap gap-2 hidden" data-testid="copilot-suggestions"></div>
+              </div>
+            </div>
+
+            <!-- Ô nhập câu hỏi -->
+            <div class="p-3 bg-white border-t border-slate-200 shrink-0">
+              <label for="copilot-input" class="sr-only">Câu hỏi tra cứu chính sách</label>
+              <div class="relative flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all">
+                <input id="copilot-input" type="text" data-testid="copilot-input"
+                       placeholder="Hỏi về sản phẩm, chính sách, lãi suất, quy trình phê duyệt..."
+                       class="flex-1 bg-transparent text-xs text-slate-800 placeholder-slate-400 focus:outline-none"
+                       aria-label="Câu hỏi tra cứu chính sách" />
+                <button type="button" data-testid="copilot-send" title="Gửi câu hỏi" aria-label="Gửi câu hỏi"
+                        class="w-7 h-7 ml-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg flex items-center justify-center transition-colors shadow-2xs">
+                  <i class="fa-solid fa-paper-plane text-xs"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script type="module">
+    import { getCall, getLead, getLeadActivities, endCallById, microsipHangup } from '/js/api.js';
+    import { CONFIG } from '/js/config.js';
+    import { escapeHtml, formatDuration, formatDateTime, activityTypeLabel, queryParam } from '/js/screens.js';
+    import { initCopilot } from '/js/copilot.js';
+
+    const callId = queryParam('callId');
+    const leadId = queryParam('leadId');
+    let startedAtMs = Date.now();
+    let timerHandle = null;
+    let ended = false;
+
+    function showError(msg) {
+      const el = document.getElementById('error-banner');
+      el.textContent = msg || '';
+      el.classList.toggle('hidden', !msg);
+    }
+    function text(testid, value) {
+      const el = document.querySelector(`[data-testid="${testid}"]`);
+      if (el) el.textContent = value == null || value === '' ? '--' : String(value);
+    }
+
+    function tick() {
+      document.getElementById('call-timer').textContent = formatDuration((Date.now() - startedAtMs) / 1000);
+    }
+
+    function setupTabs() {
+      const btns = document.querySelectorAll('.tab-btn');
+      btns.forEach((b) => b.addEventListener('click', () => {
+        btns.forEach((x) => {
+          x.classList.remove('text-blue-700', 'border-blue-600', 'bg-white', 'font-semibold');
+          x.classList.add('text-slate-600', 'border-transparent', 'font-medium');
+        });
+        b.classList.add('text-blue-700', 'border-blue-600', 'bg-white', 'font-semibold');
+        b.classList.remove('text-slate-600', 'border-transparent', 'font-medium');
+        document.querySelectorAll('[data-tab-panel]').forEach((p) => p.classList.add('hidden'));
+        document.querySelector(`[data-tab-panel="${b.dataset.tab}"]`).classList.remove('hidden');
+      }));
+    }
+
+    async function loadContext() {
+      try {
+        const call = await getCall(callId);
+        if (call.startedAt) startedAtMs = new Date(call.startedAt).getTime();
+      } catch (_) { /* non-blocking */ }
+      try {
+        const lead = await getLead(leadId);
+        const c = lead.customer || {};
+        text('call-lead-code', `${lead.leadCode} - ${c.fullName || lead.customerName || ''}`);
+        text('s2-customer-name', c.fullName || lead.customerName || '');
+        text('s2-customer-phone', c.phoneNumber || '');
+        text('s2-customer-occupation', c.occupation || '--');
+        text('s2-customer-income', c.estimatedIncome ? `${c.estimatedIncome.toLocaleString('vi-VN')} đ` : '--');
+        text('s2-customer-address', c.address || '--');
+        text('s2-lead-code', lead.leadCode);
+        text('s2-lead-product', lead.productInterest || '--');
+        text('s2-lead-content', lead.content || '--');
+
+        const acts = await getLeadActivities(leadId);
+        const host = document.getElementById('s2-activity-list');
+        host.innerHTML = '';
+        if (!acts || acts.length === 0) {
+          host.innerHTML = '<p class="text-slate-400 text-[11px]" data-testid="s2-activity-empty">Chưa có hoạt động</p>';
+        } else {
+          for (const a of acts) {
+            const div = document.createElement('div');
+            div.className = 'border border-slate-200 rounded-md p-2 text-xs bg-white';
+            div.innerHTML = `<div class="flex justify-between"><span class="font-semibold">${escapeHtml(activityTypeLabel(a.type))}</span><span class="text-slate-400">${escapeHtml(formatDateTime(a.occurredAt))}</span></div>`;
+            host.appendChild(div);
+          }
+        }
+      } catch (e) {
+        showError(e.message || 'Không tải được dữ liệu cuộc gọi');
+      }
+    }
+
+    async function endCall() {
+      if (ended) return;
+      ended = true;
+      const btn = document.getElementById('end-call-button');
+      btn.disabled = true;
+      if (timerHandle) clearInterval(timerHandle);
+      try { await microsipHangup(); } catch (_) { /* demo */ }
+      try {
+        await endCallById(callId); // idempotent (AC1.1.3)
+        // Sang màn Kết quả cuộc gọi S3 (U4) — màn tự poll pipeline (BR7.3).
+        const q = new URLSearchParams({ callId });
+        if (leadId) q.set('leadId', leadId);
+        window.location.href = `/screens/3-ket-qua-cuoc-goi.html?${q.toString()}`;
+      } catch (e) {
+        showError(e.message || 'Không kết thúc được cuộc gọi');
+      }
+    }
+
+    // Nghe sự kiện 'end' của MicroSIP (C6, SSE) để gọi /ended (idempotent).
+    // Server phát event dạng `data: {type:'end',...}` (không đặt tên event).
+    function listenMicrosip() {
+      try {
+        const es = new EventSource(`${CONFIG.microsipBaseUrl}/api/microsip/events`);
+        es.onmessage = (e) => {
+          try {
+            const ev = JSON.parse(e.data);
+            if (ev && ev.type === 'end') endCall();
+          } catch (_) { /* bỏ qua payload không hợp lệ */ }
+        };
+        es.onerror = () => { /* SSE không có cũng không sao ở demo */ };
+      } catch (_) { /* không chặn */ }
+    }
+
+    function init() {
+      if (!callId) { showError('Thiếu callId'); return; }
+      setupTabs();
+      loadContext();
+      timerHandle = setInterval(tick, 1000);
+      tick();
+      document.getElementById('end-call-button').addEventListener('click', endCall);
+      listenMicrosip();
+      initCopilot(callId); // Panel Copilot (U3, C2)
+    }
+    init();
+  </script>
+</body>
+</html>

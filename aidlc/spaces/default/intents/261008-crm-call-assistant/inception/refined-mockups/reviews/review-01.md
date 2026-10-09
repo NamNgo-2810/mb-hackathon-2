@@ -1,0 +1,20 @@
+## Review
+
+**Verdict:** NOT-READY
+**Reviewer:** aidlc-product-lead-agent
+**Date:** 2026-10-08T15:10:54Z
+**Iteration:** 1
+
+### Findings
+
+| ID | Severity | Location | Finding | Required action | Status |
+|---|---|---|---|---|---|
+| R-01 | Major | aidlc/spaces/default/intents/261008-crm-call-assistant/inception/refined-mockups/mockups.md > Screen S2 — AI Sales Knowledge Copilot | The live in-call AI copilot is specced as a real, in-scope LLM feature, but no functional requirement describes it — requirements FR5 only covers post-call summary, auto-fill form, and selling suggestion. A reviewer at the gate cannot confirm the copilot's expected behavior, grounding data, or acceptance criteria from the requirements. | Add a requirement for the in-call copilot (what it answers, what knowledge it is grounded in, expected states) to requirements.md, or have the human confirm at the gate that this feature ships without a requirement for the hackathon. | New |
+| R-02 | Major | aidlc/spaces/default/intents/261008-crm-call-assistant/inception/refined-mockups/mockups.md > Screen S3 — AI Sales Performance scorecard | The AI Sales Performance scorecard (overall score, tone, pace, 5 per-criterion scores) is specced as a real in-scope LLM feature, but no functional requirement defines it — FR5 does not mention scoring. The scoring criteria, scale, and what a score means are design decisions with no requirement to trace to or test against. | Add a requirement for the sales-performance scorecard (criteria, scale, and inputs) to requirements.md, or have the human confirm at the gate that it ships without a requirement for the hackathon. | New |
+| R-03 | Minor | aidlc/spaces/default/intents/261008-crm-call-assistant/inception/refined-mockups/mockups.md > Screen S3 — AI auto-keyin | The mockup shows 8 CRM fields with specific labels (Nhu cầu gửi, Kỳ hạn, Lãi suất, Sản phẩm chốt, Nguồn tiền, Thời gian dự kiến, Kênh, etc.) that differ from the FR5.2 fallback field set (customer name, phone, call date/time, purpose, needs, outcome, follow-up action, next-contact date). The two field lists do not line up, and FR5.2 says the Figma governs the final set. | Reconcile the S3 field list with FR5.2 — confirm the shown fields are the intended set and note that they supersede the FR5.2 fallback, so build and QA work from one list. | New |
+| R-04 | Minor | aidlc/spaces/default/intents/261008-crm-call-assistant/inception/refined-mockups/mockups.md > Design Language and Assumptions & Open Questions | FR6.1 requires the UI to closely match the BA Figma, but exact colors and typography are left as roles to be bound at build because the Figma could not be opened this session. There is no artifact a reviewer can check the match against, so FR6.1 compliance cannot be verified at this gate. | Note explicitly that FR6.1 (Figma match) is verified at build/code-generation against the Figma file, so the gate does not treat these mockups as the final visual contract; or attach the pasted design content as the match reference. | New |
+| R-05 | Minor | aidlc/spaces/default/intents/261008-crm-call-assistant/inception/refined-mockups/mockups.md > Screen S2 and Screen States | S2 (in-call) has no empty/error/loading states enumerated in the per-screen Screen States section (which covers S1 and S3); S2's component states live only in interaction-spec.md. The copilot and quick-note failure/loading behavior is not visible in the mockups document itself. | Add S2 loading/empty/error coverage to the Screen States section of mockups.md, or cross-reference interaction-spec.md so the states for all three screens are discoverable from the mockups. | New |
+
+### Summary
+
+The 3 RM screens are complete and implementable and trace cleanly to FR1.1, FR1.3, FR3, FR4, and FR5. The main issue for the human to weigh is that the two features deliberately put in scope — the in-call AI copilot (S2) and the AI Sales Performance scorecard (S3) — have no requirement to trace to, so they are untestable against requirements as written; this is advisory decision support, not a hard block for a one-day demo.

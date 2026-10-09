@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thông tin chi tiết tiềm năng bán - MB Advance CRM</title>
+  <!-- Tailwind CSS v3 + plugins (theo mockup S1) -->
+  <script src="/js/tailwind-config.js"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Phosphor Icons (theo mockup S1) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css" />
+</head>
+<body class="bg-[#f0f2f7] text-[#1e293b] font-sans antialiased text-xs h-screen flex overflow-hidden">
+  <!-- Left sidebar -->
+  <aside class="w-20 bg-white border-r border-slate-200 flex flex-col items-center py-3 shrink-0 z-20 shadow-sm h-full" data-purpose="main-navigation">
+    <nav class="flex flex-col items-center w-full px-1.5 gap-1">
+      <a class="flex flex-col items-center justify-center w-full py-1.5 px-1 text-white bg-[#306bf3] rounded-lg font-semibold" href="#">
+        <i class="ph ph-currency-dollar-simple text-xl mb-0.5 text-white"></i>
+        <span class="text-[10px] font-semibold leading-tight text-center">Quản lý bán</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <div class="flex-1 flex flex-col h-screen overflow-hidden">
+    <div class="h-11 bg-white border-b border-slate-200 px-5 flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-3">
+        <h2 class="text-sm font-bold text-slate-800">Thông tin chi tiết</h2>
+        <span class="text-slate-300">|</span>
+        <span class="text-[11px] text-slate-500" data-testid="current-rm">...</span>
+      </div>
+    </div>
+
+    <div id="error-banner" class="hidden bg-red-50 border-b border-red-200 text-red-700 px-5 py-2 text-[11px]" data-testid="error-banner"></div>
+
+    <div class="flex-1 grid grid-cols-12 gap-4 p-4 overflow-hidden bg-[#f4f6fa]">
+      <!-- Col 1: customer + activities -->
+      <section class="col-span-4 flex flex-col gap-3 h-full overflow-hidden">
+        <div class="bg-white rounded-lg border border-slate-200 shadow-xs p-3" data-purpose="customer-info-card">
+          <div class="flex items-center gap-3 border-b border-slate-100 pb-2">
+            <div class="w-11 h-11 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0 text-blue-600">
+              <i class="ph ph-user text-xl"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 class="text-xs font-bold text-[#306bf3] truncate" data-testid="customer-name">...</h3>
+              <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                <span class="bg-[#2eb86c] text-white text-[10px] font-bold px-2 py-0.5 rounded-full" data-testid="customer-segment"></span>
+                <span class="flex items-center text-[#306bf3] text-[11px] font-semibold gap-1">
+                  <i class="ph-fill ph-phone text-xs"></i>
+                  <span data-testid="customer-phone"></span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <dl class="grid grid-cols-2 gap-2 mt-2 text-[10px]">
+            <div><dt class="text-slate-400">Độ tuổi</dt><dd class="font-semibold text-slate-800" data-testid="customer-age"></dd></div>
+            <div><dt class="text-slate-400">Nghề nghiệp</dt><dd class="font-semibold text-slate-800" data-testid="customer-occupation"></dd></div>
+            <div><dt class="text-slate-400">Thu nhập ước tính</dt><dd class="font-semibold text-emerald-700" data-testid="customer-income"></dd></div>
+            <div><dt class="text-slate-400">Địa chỉ</dt><dd class="font-semibold text-slate-800 truncate" data-testid="customer-address"></dd></div>
+          </dl>
+        </div>
+
+        <div class="bg-white rounded-lg border border-slate-200 shadow-xs flex-1 flex flex-col overflow-hidden" data-purpose="activity-management-card">
+          <div class="px-3 py-2 border-b border-slate-100 flex items-center justify-between shrink-0">
+            <h4 class="font-bold text-slate-800 text-xs">Quản lý hoạt động</h4>
+            <button class="flex items-center gap-1 px-2 py-0.5 text-slate-600 bg-slate-50 border border-slate-200 rounded text-[10.5px]" data-testid="activity-filter-button">
+              <i class="ph ph-funnel text-xs text-blue-600"></i><span>Bộ lọc</span>
+            </button>
+          </div>
+          <div id="activity-list" class="flex-1 overflow-y-auto p-2.5 space-y-2" data-testid="activity-list" data-purpose="activity-list"></div>
+        </div>
+      </section>
+
+      <!-- Col 2: lead detail -->
+      <section class="bg-white rounded-lg border border-slate-200 shadow-xs flex flex-col overflow-hidden col-span-8">
+        <div class="overflow-y-auto flex-1 p-3 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-[13px] font-bold text-[#2e5ef3]" data-testid="lead-title">...</h3>
+            <span class="inline-block text-[11px] font-semibold px-2 py-0.5 rounded border" data-testid="lead-priority"></span>
+          </div>
+
+          <!-- Stage stepper -->
+          <div class="py-0.5 px-1" data-purpose="stepper-progress" data-testid="lead-stepper">
+            <div id="lead-stepper" class="flex items-center justify-between relative"></div>
+          </div>
+
+          <div class="border border-slate-200 rounded-lg overflow-hidden bg-white shadow-xs">
+            <div class="bg-[#f8fafc] px-3 py-1.5 border-b border-slate-200 flex items-center gap-1.5 text-slate-800 font-bold text-[11px]">
+              <i class="ph ph-calendar-blank text-blue-600 text-xs"></i><span>NỘI DUNG</span>
+            </div>
+            <div class="p-2.5 text-[10px] text-slate-700 whitespace-pre-line" data-testid="lead-content"></div>
+          </div>
+
+          <div class="border border-slate-200 rounded-lg overflow-hidden bg-white shadow-xs">
+            <div class="bg-[#f8fafc] px-3 py-1.5 border-b border-slate-200 flex items-center gap-1.5 text-slate-800 font-bold text-[11px]">
+              <i class="ph ph-article text-blue-600 text-xs"></i><span>KỊCH BẢN BÁN</span>
+            </div>
+            <div class="p-2.5 text-[10.5px] text-slate-700 leading-relaxed whitespace-pre-line" data-testid="lead-sales-script"></div>
+          </div>
+        </div>
+
+        <div class="p-2.5 border-t border-slate-200 bg-white flex items-center justify-end gap-2.5 shrink-0">
+          <button id="call-button" data-testid="call-customer-button"
+                  class="bg-[#306bf3] hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-xs px-4 py-2 rounded-md flex items-center gap-1.5 shadow-sm transition-all">
+            <i class="ph-fill ph-phone text-sm"></i><span>Gọi KH</span>
+          </button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script type="module">
+    import { getMe, getDemoLead, getLead, getLeadActivities, createCall, microsipCall } from '/js/api.js';
+    import { escapeHtml, stageLabel, priorityLabel, activityTypeLabel, formatDateTime, queryParam } from '/js/screens.js';
+
+    const STAGES = ['CHUA_TIEP_CAN', 'DANG_TIEP_CAN', 'CHUYEN_CO_HOI', 'TU_CHOI'];
+    let currentLead = null;
+
+    function showError(msg) {
+      const el = document.getElementById('error-banner');
+      el.textContent = msg || '';
+      el.classList.toggle('hidden', !msg);
+    }
+
+    function text(testid, value) {
+      const el = document.querySelector(`[data-testid="${testid}"]`);
+      if (el) el.textContent = value == null || value === '' ? '--' : String(value);
+    }
+
+    function renderStepper(stage) {
+      const idx = STAGES.indexOf(stage);
+      const host = document.getElementById('lead-stepper');
+      host.innerHTML = '';
+      STAGES.forEach((s, i) => {
+        const done = i <= idx;
+        const dot = document.createElement('div');
+        dot.className = 'flex items-center gap-1 z-10';
+        dot.innerHTML = `<div class="w-4 h-4 rounded-full ${done ? 'bg-[#4fc487] text-white' : 'border-2 border-slate-300 bg-white'} flex items-center justify-center text-[10px]">${done ? '<i class="ph-bold ph-check"></i>' : ''}</div>`
+          + `<span class="text-[10px] ${done ? 'font-medium text-slate-700' : 'text-slate-500'}">${escapeHtml(stageLabel(s))}</span>`;
+        host.appendChild(dot);
+        if (i < STAGES.length - 1) {
+          const bar = document.createElement('div');
+          bar.className = `flex-1 h-[2px] ${i < idx ? 'bg-[#4fc487]' : 'bg-slate-300'} mx-1.5`;
+          host.appendChild(bar);
+        }
+      });
+    }
+
+    function renderActivities(list) {
+      const host = document.getElementById('activity-list');
+      host.innerHTML = '';
+      if (!list || list.length === 0) {
+        const p = document.createElement('p');
+        p.className = 'text-slate-400 text-[11px] p-2';
+        p.setAttribute('data-testid', 'activity-empty');
+        p.textContent = 'Chưa có hoạt động';
+        host.appendChild(p);
+        return;
+      }
+      for (const a of list) {
+        const summary = a.type === 'CUOC_GOI'
+          ? (a.aiSummary ? escapeHtml(a.aiSummary) : 'Không có tóm tắt AI')
+          : '';
+        const viewLink = (a.type === 'CUOC_GOI' && a.callId)
+          ? `<a href="/screens/3-ket-qua-cuoc-goi.html?${new URLSearchParams({ callId: a.callId, leadId: currentLead ? currentLead.leadId : '' }).toString()}"
+                class="text-[#306bf3] font-semibold hover:underline inline-flex items-center gap-1 mt-1"
+                data-testid="activity-view-call-${escapeHtml(a.callId)}">Xem kết quả cuộc gọi</a>`
+          : '';
+        const card = document.createElement('div');
+        card.className = 'border border-slate-200 rounded-md p-2 bg-white';
+        card.setAttribute('data-testid', `activity-${escapeHtml(a.activityId)}`);
+        card.innerHTML =
+          `<div class="flex items-center justify-between">
+             <span class="font-bold text-slate-800 text-[11px]">${escapeHtml(activityTypeLabel(a.type))}</span>
+             <span class="text-[9.5px] text-slate-400">${escapeHtml(formatDateTime(a.occurredAt))}</span>
+           </div>
+           <div class="mt-1 text-[10px] space-y-0.5">
+             <div class="flex justify-between"><span class="text-slate-400">Sản phẩm:</span><span class="text-slate-700">${escapeHtml(a.product || '--')}</span></div>
+             <div class="flex justify-between"><span class="text-slate-400">Kết quả:</span><span class="text-slate-700">${escapeHtml(a.result || '--')}</span></div>
+             ${a.type === 'CUOC_GOI' ? `<div class="text-slate-500 italic mt-1" data-testid="activity-ai-summary">${summary}</div>` : ''}
+             ${viewLink}
+           </div>`;
+        host.appendChild(card);
+      }
+    }
+
+    function renderLead(lead) {
+      currentLead = lead;
+      text('lead-title', `${lead.leadCode} - ${lead.productInterest || ''}`);
+      const prio = document.querySelector('[data-testid="lead-priority"]');
+      if (prio) prio.textContent = priorityLabel(lead.priority);
+      text('lead-content', lead.content || '--');
+      text('lead-sales-script', lead.salesScript || '--');
+      renderStepper(lead.stage);
+
+      const c = lead.customer || {};
+      text('customer-name', `${c.customerId || ''} ${c.fullName || lead.customerName || ''}`.trim());
+      text('customer-segment', c.segment || '');
+      text('customer-phone', c.phoneNumber || '');
+      text('customer-age', c.age ? `${c.age} tuổi` : '--');
+      text('customer-occupation', c.occupation || '--');
+      text('customer-income', c.estimatedIncome ? `${c.estimatedIncome.toLocaleString('vi-VN')} đ` : '--');
+      text('customer-address', c.address || '--');
+
+      // Chặn gọi khi số không hợp lệ (phoneValid từ server).
+      const btn = document.getElementById('call-button');
+      if (lead.phoneValid === false) {
+        btn.disabled = true;
+        btn.title = 'Số điện thoại khách hàng không hợp lệ';
+      }
+    }
+
+    async function callCustomer() {
+      const btn = document.getElementById('call-button');
+      btn.disabled = true;
+      try {
+        const call = await createCall(currentLead.leadId);
+        // Đặt cuộc gọi qua MicroSIP (C6); lỗi MicroSIP không chặn chuyển màn demo.
+        try { await microsipCall(currentLead.customer && currentLead.customer.phoneNumber); } catch (_) { /* demo */ }
+        const q = new URLSearchParams({ callId: call.callId, leadId: currentLead.leadId });
+        window.location.href = `/screens/2-thuc-hien-cuoc-goi.html?${q.toString()}`;
+      } catch (e) {
+        showError(e.message || 'Không tạo được cuộc gọi');
+        btn.disabled = false;
+      }
+    }
+
+    async function init() {
+      try {
+        const me = await getMe();
+        text('current-rm', me.displayName || '');
+      } catch (_) { /* non-blocking */ }
+      try {
+        const leadId = queryParam('leadId');
+        const lead = leadId ? await getLead(leadId) : await getDemoLead();
+        renderLead(lead);
+        const acts = await getLeadActivities(lead.leadId);
+        renderActivities(acts);
+      } catch (e) {
+        showError(e.message || 'Không tải được chi tiết lead');
+      }
+      document.getElementById('call-button').addEventListener('click', callCustomer);
+    }
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,514 @@
+<!DOCTYPE html><html lang="vi" class="h-full" style=""><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1440, initial-scale=1.0">
+  <title>Màn hình Cuộc gọi 2 Block - MB Advance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            mb: {
+              blue: '#002896',
+              lightBlue: '#1B4DFF',
+              red: '#DA251D',
+              dark: '#0A1128',
+              grayBg: '#F4F6F9',
+              border: '#E2E8F0',
+              accent: '#00A3FF'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      width: 1440px;
+      min-width: 1440px;
+      max-width: 1440px;
+      height: 1024px;
+      min-height: 1024px;
+      max-height: 1024px;
+      overflow: hidden;
+      background-color: #F4F6F9;
+      color: #1E293B;
+      box-sizing: border-box;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="flex flex-row h-[1024px] w-[1440px] bg-[#F4F6F9] text-slate-800 antialiased select-none">
+
+  <!-- LEFT PERSISTENT SIDEBAR MB -->
+  <aside class="w-[80px] bg-white border-r border-slate-200 flex flex-col justify-between items-center py-4 text-slate-700 shrink-0 z-20 shadow-xs"><div class="flex flex-col items-center w-full px-2.5">
+  <!-- Logo MB -->
+  <div class="mb-5 flex items-center justify-center w-full">
+    <div class="w-12 h-10 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center p-1.5 shadow-xs overflow-hidden">
+      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGB5GVWJ0SrL_SxayEJ4uwBqel5uDBxmIL0CJoOTURnAHceXVTf2SVuiTewJFjzB_pF8x1cwLLh3P7Bpbl0CQawed1WXnxtJG_ofZmVBZSYa-A3uz-_BqpJdiA_UIH8ZbOheAJ3b7GmnkjFUviiWTBC5Y2wMIUbHQaf9FJWHc_iINGa8DimURgDAcmUg6dxtNP8UTKrogSX3W36Jn6O437Kol5_jSbP39ol8MZcCapJGUdg2JUOTgspQ" alt="MB Logo" class="w-full h-full object-contain">
+    </div>
+  </div>
+
+  <!-- Navigation Items -->
+  <nav class="flex flex-col gap-4 w-full items-center"><a href="#" class="flex flex-col items-center justify-center w-full py-2 px-1 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-slate-50 transition-colors group" title="Trang chủ"><i class="fa-solid fa-house text-base mb-1 group-hover:scale-105 transition-all"></i><span class="text-[10px] text-center font-medium leading-none">Trang chủ</span></a><a href="#" class="flex flex-col items-center justify-center w-full py-2 px-1 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-slate-50 transition-colors group" title="Tiềm năng bán"><i class="fa-solid fa-bullseye text-base mb-1 group-hover:scale-105 transition-all"></i><span class="text-[10px] text-center font-medium leading-none">TNB</span></a><a href="#" class="flex flex-col items-center justify-center w-full py-2 px-1 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-slate-50 transition-colors group" title="Cơ hội bán"><i class="fa-solid fa-briefcase text-base mb-1 group-hover:scale-105 transition-all"></i><span class="text-[10px] text-center font-medium leading-none">Cơ hội</span></a><a href="#" class="flex flex-col items-center justify-center w-full py-2 px-1 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-slate-50 transition-colors group" title="Khách hàng"><i class="fa-solid fa-users text-base mb-1 group-hover:scale-105 transition-all"></i><span class="text-[10px] text-center font-medium leading-none">Khách hàng</span></a><a href="#" class="flex flex-col items-center justify-center w-full py-2 px-1 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-slate-50 transition-colors group" title="Công việc"><i class="fa-solid fa-list-check text-base mb-1 group-hover:scale-105 transition-all"></i><span class="text-[10px] text-center font-medium leading-none">Công việc</span></a><div class="w-10 h-[1px] bg-slate-200 mx-auto my-1.5"></div><a href="#" class="flex flex-col items-center justify-center w-full py-2 px-1 rounded-xl bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs group" title="AI Coach"><i class="fa-solid fa-wand-magic-sparkles text-base text-blue-600 mb-1 group-hover:scale-105 transition-all"></i><span class="text-[9px] text-center font-bold tracking-tight leading-none text-blue-700">AI Sales</span></a></nav>
+</div>
+
+<!-- Bottom Section: User Avatar & Logout -->
+<div class="flex flex-col items-center gap-2.5 w-full px-2.5">
+  <div class="w-9 h-9 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center shadow-xs ring-2 ring-blue-100 cursor-pointer hover:bg-blue-700 transition-colors">
+    Y
+  </div>
+  <button class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 text-xs transition-colors" title="Đăng xuất">
+    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+  </button>
+</div></aside>
+
+  <!-- MAIN WRAPPER (1360px x 1024px) -->
+  <main class="flex-1 flex flex-col h-[1024px] overflow-hidden bg-[#F4F6F9]">
+    
+    <!-- TOP GLOBAL BAR -->
+    <header class="h-[60px] bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0 z-10"></header>
+
+    <!-- IN-CALL CONTROL HEADER BANNER -->
+    <section class="h-[52px] bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0 shadow-sm"><div class="flex items-center gap-3"><button class="px-2.5 py-1 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md flex items-center gap-1.5 transition-colors cursor-pointer"><i class="fa-solid fa-arrow-left text-[11px]"></i>Quay lại</button><div class="h-4 w-[1px] bg-slate-200"></div><div class="flex items-center gap-2.5"><h1 class="text-xs font-bold text-slate-800 tracking-tight">Thực hiện cuộc gọi</h1><span class="text-slate-300 text-xs">|</span><span class="text-xs font-medium text-slate-600"><span class="text-slate-400 font-normal">TNB:</span> <strong class="font-semibold text-slate-800">L120825003485</strong> - Nguyễn Phương Thảo</span><span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>Đang gọi</span></div></div><div class="flex items-center gap-3"><div class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-slate-700 font-mono text-xs font-semibold"><i class="fa-regular fa-clock text-blue-600"></i><span class="">03:25</span></div><div class="flex items-center gap-1 bg-slate-50 border border-slate-200 p-0.5 rounded-md"><button title="Mic" class="w-7 h-7 flex items-center justify-center rounded text-slate-600 hover:bg-white hover:shadow-xs transition-all"><i class="fa-solid fa-microphone text-xs"></i></button><button title="Loa" class="w-7 h-7 flex items-center justify-center rounded text-slate-600 hover:bg-white hover:shadow-xs transition-all"><i class="fa-solid fa-volume-high text-xs"></i></button><button title="Giữ máy" class="w-7 h-7 flex items-center justify-center rounded text-slate-600 hover:bg-white hover:shadow-xs transition-all"><i class="fa-solid fa-pause text-xs"></i></button></div><button class="px-3.5 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-md text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-colors cursor-pointer"><i class="fa-solid fa-phone-slash text-xs"></i>Kết thúc</button></div></section>
+
+    <!-- WORKSPACE 2-BLOCK SPLIT LAYOUT -->
+    <div class="flex-1 p-4 grid grid-cols-12 gap-4 h-[912px] overflow-hidden">
+      
+      <!-- ========================================== -->
+      <!-- BLOCK 1: THÔNG TIN TỔNG HỢP & QUICK ACTIONS (5 Cols) -->
+      <!-- ========================================== -->
+      <section class="col-span-5 flex flex-col bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden h-[880px]">
+        
+        <!-- BLOCK 1 HEADER & TABS -->
+        <div class="bg-slate-50/70 border-b border-slate-200 px-4 pt-3 shrink-0">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+              <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700">thông tin tiềm năng bán</h2>
+            </div>
+            
+          </div>
+
+          <!-- TABS BAR -->
+          <div class="flex items-center gap-2 -mb-[1px]">
+            <button class="px-3.5 py-2 text-xs font-semibold text-blue-700 border-b-2 border-blue-600 bg-white rounded-t-lg shadow-xs flex items-center gap-1.5">
+              <i class="fa-solid fa-user-check text-blue-600"></i>
+              Thông tin KH
+            </button>
+            <button class="px-3 py-2 text-xs font-medium text-slate-600 hover:text-slate-900 border-b-2 border-transparent hover:border-slate-300 rounded-t-lg transition-colors flex items-center gap-1.5">
+              <i class="fa-solid fa-bullseye text-slate-400"></i>
+              Chi tiết TNB
+            </button>
+            <button class="px-3 py-2 text-xs font-medium text-slate-600 hover:text-slate-900 border-b-2 border-transparent hover:border-slate-300 rounded-t-lg transition-colors flex items-center gap-1.5">
+              <i class="fa-solid fa-clock-rotate-left text-slate-400"></i>
+              Lịch sử cuộc gọi&nbsp;&nbsp;</button>
+          </div>
+        </div>
+
+        <!-- QUICK ACTION ACTION-BAR (Thao tác nhanh trong cuộc gọi) -->
+        
+
+        <!-- TAB BODY CONTENT (Scrollable) -->
+        <div class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4">
+          
+          <!-- CUSTOMER CARD -->
+          <div class="bg-white rounded-lg border border-slate-200 p-3.5 shadow-2xs">
+            <div class="flex items-start gap-3">
+              <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-purple-500 to-indigo-500 text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-sm border-2 border-white">
+                PT
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h3 class="text-sm font-bold text-slate-900 leading-tight">Nguyễn Phương Thảo</h3>
+                  <span class="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-blue-100 text-blue-800 border border-blue-200">
+                    VIP
+                  </span>
+                  <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    INDIV-MASS
+                  </span>
+                </div>
+                <div class="flex items-center gap-3 mt-1.5 text-xs text-slate-600">
+                  <span class="flex items-center gap-1 font-mono text-slate-700 font-medium">
+                    <i class="fa-solid fa-phone text-slate-400 text-[10px]"></i>
+                    0361 624 367
+                  </span>
+                  <button title="Sao chép SĐT" class="text-slate-400 hover:text-blue-600">
+                    <i class="fa-regular fa-copy text-[11px]"></i>
+                  </button>
+                  <span class="text-slate-300">|</span>
+                  <span class="text-slate-500 text-[11px]">Hà Nội</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Customer Details Grid -->
+            <div class="grid grid-cols-2 gap-2.5 mt-3 pt-3 border-t border-slate-100 text-xs">
+              <div>
+                <span class="text-slate-400 text-[11px] block">Độ tuổi</span>
+                <span class="font-semibold text-slate-800">34 tuổi (1991)</span>
+              </div>
+              <div>
+                <span class="text-slate-400 text-[11px] block">Nghề nghiệp</span>
+                <span class="font-semibold text-slate-800">Nhân viên văn phòng</span>
+              </div>
+              <div>
+                <span class="text-slate-400 text-[11px] block">Thu nhập ước tính</span>
+                <span class="font-semibold text-emerald-700 font-mono">40 triệu / tháng</span>
+              </div>
+              <div>
+                <span class="text-slate-400 text-[11px] block">Địa chỉ</span>
+                <span class="font-semibold text-slate-800 truncate block" title="Hai Bà Trưng, Hà Nội">Hai Bà Trưng, Hà Nội</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ACTIVE TNB HIGHLIGHT CARD -->
+          <div class="bg-gradient-to-br from-amber-50/50 to-orange-50/30 rounded-lg border border-amber-200/80 p-3.5 shadow-2xs">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[11px] font-bold text-amber-900 flex items-center gap-1.5 uppercase tracking-wider">
+                <i class="fa-solid fa-fire text-amber-500"></i> Tiềm năng bán đang kích hoạt
+              </span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                Hot Lead (9/10)
+              </span>
+            </div>
+
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between items-center py-1 border-b border-amber-100/60">
+                <span class="text-slate-500 text-[11px]">Mã tiềm năng bán:</span>
+                <span class="font-mono font-bold text-slate-800">L120825003485</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-amber-100/60">
+                <span class="text-slate-500 text-[11px]">Sản phẩm quan tâm:</span>
+                <span class="font-bold text-blue-700">Tiền gửi tiết kiệm dài hạn</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-amber-100/60">
+                <span class="text-slate-500 text-[11px]">Nguồn phát sinh:</span>
+                <span class="font-medium text-slate-700">Tự đăng ký App MBBank</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-amber-100/60">
+                <span class="text-slate-500 text-[11px]">Ngày tạo:</span>
+                <span class="font-mono text-slate-700">22/11/2025</span>
+              </div>
+              <div class="flex justify-between items-center py-1">
+                <span class="text-slate-500 text-[11px]">Trạng thái xử lý:</span>
+                <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                  <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> Đang tiếp cận
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- RECENT INTERACTIONS & QUICK NOTE BOX -->
+          <div class="bg-white rounded-lg border border-slate-200 p-3.5 shadow-2xs">
+            <div class="flex items-center justify-between mb-2.5">
+              <h4 class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                <i class="fa-solid fa-list-timeline text-blue-600"></i> Lịch sử tương tác gần nhất
+              </h4>
+              <span class="text-[10px] text-slate-400">3 sự kiện</span>
+            </div>
+
+            <!-- Timeline -->
+            <div class="space-y-3 relative pl-3.5 before:absolute before:left-1 before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-200 text-xs">
+              <div class="relative pl-2.5">
+                <span class="absolute -left-[14px] top-1 w-2.5 h-2.5 rounded-full bg-blue-600 ring-2 ring-white"></span>
+                <div class="flex items-center justify-between">
+                  <span class="font-semibold text-slate-800 text-[11px]">Tạo mới TNB (Tự đăng ký)</span>
+                  <span class="text-[10px] text-slate-400 font-mono">Hôm nay 10:30</span>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-0.5">Khách hàng xem bảng lãi suất trên App MBBank</p>
+              </div>
+
+              <div class="relative pl-2.5">
+                <span class="absolute -left-[14px] top-1 w-2.5 h-2.5 rounded-full bg-amber-500 ring-2 ring-white"></span>
+                <div class="flex items-center justify-between">
+                  <span class="font-semibold text-slate-800 text-[11px]">Gọi điện - Không bắt máy</span>
+                  <span class="text-[10px] text-slate-400 font-mono">20/11 15:20</span>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-0.5">RM gọi lần 1, máy bận cuộc gọi khác</p>
+              </div>
+
+              <div class="relative pl-2.5">
+                <span class="absolute -left-[14px] top-1 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white"></span>
+                <div class="flex items-center justify-between">
+                  <span class="font-semibold text-slate-800 text-[11px]">SMS gửi chính sách lãi suất</span>
+                  <span class="text-[10px] text-slate-400 font-mono">15/11 09:12</span>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-0.5">Đã gửi tin nhắn giới thiệu gói ưu đãi VIP</p>
+              </div>
+            </div>
+
+            <!-- IN-CALL QUICK NOTE INPUT FIELD -->
+            
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- BLOCK 2: AI SALES KNOWLEDGE (7 Cols) -->
+      <!-- ========================================== -->
+      <section class="col-span-7 flex flex-col bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden h-[880px]">
+        
+        <!-- BLOCK 2 TOP HEADER -->
+        <div class="h-[52px] bg-gradient-to-r from-blue-50/80 via-white to-indigo-50/50 border-b border-slate-200 px-5 flex items-center justify-between shrink-0">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center shadow-xs">
+              <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-sm font-bold text-slate-900 leading-tight">AI Sales Knowledge</h2>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700 border border-blue-200">
+                  <i class="fa-solid fa-bolt text-[9px] mr-0.5"></i> Copilot Active
+                </span>
+              </div>
+              <p class="text-[11px] text-slate-500 leading-tight mt-0.5">Trợ lý tra cứu chính sách &amp; sản phẩm</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button class="text-xs text-slate-500 hover:text-slate-800 px-2 py-1 rounded hover:bg-slate-100 transition-colors">
+              <i class="fa-solid fa-compress text-[11px] mr-1"></i> Thu gọn
+            </button>
+            <button class="text-slate-400 hover:text-slate-600 p-1">
+              <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- INNER 2-COLUMN WORKSPACE: LEFT SEARCH HISTORY & RIGHT CHAT WORKSPACE -->
+        <div class="flex-1 flex overflow-hidden">
+          
+          <!-- LEFT SUB-COLUMN: LỊCH SỬ TRA CỨU (W-64 / 220px) -->
+          <div class="w-[210px] bg-slate-50/60 border-r border-slate-200 flex flex-col shrink-0 p-3">
+            <!-- New search button -->
+            <button class="w-full py-2 px-3 bg-white hover:bg-blue-50 border border-blue-200 text-blue-700 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 shadow-2xs transition-colors mb-3">
+              <i class="fa-solid fa-plus text-[10px]"></i>
+              Cuộc trò chuyện mới
+            </button>
+
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2 px-1">
+              Lịch sử tra cứu
+            </span>
+
+            <!-- Search Topic List -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar space-y-1.5 pr-1">
+              <!-- Active Topic -->
+              <a href="#" class="flex items-center gap-2 px-2.5 py-2 rounded-lg bg-blue-100/70 text-blue-900 border border-blue-200 font-semibold text-xs shadow-2xs">
+                <i class="fa-regular fa-file-lines text-blue-600 shrink-0 text-xs"></i>
+                <span class="truncate">Lãi suất gửi 12 tháng</span>
+              </a>
+
+              <a href="#" class="flex items-center gap-2 px-2.5 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 text-xs font-medium transition-colors">
+                <i class="fa-solid fa-money-bill-transfer text-slate-400 shrink-0 text-xs"></i>
+                <span class="truncate">Tất toán trước hạn</span>
+              </a>
+
+              <a href="#" class="flex items-center gap-2 px-2.5 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 text-xs font-medium transition-colors">
+                <i class="fa-solid fa-scale-balanced text-slate-400 shrink-0 text-xs"></i>
+                <span class="truncate">So sánh MB vs Ngân hàng...</span>
+              </a>
+
+              <a href="#" class="flex items-center gap-2 px-2.5 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 text-xs font-medium transition-colors">
+                <i class="fa-solid fa-book-open text-slate-400 shrink-0 text-xs"></i>
+                <span class="truncate">Điều kiện mở sổ</span>
+              </a>
+
+              <a href="#" class="flex items-center gap-2 px-2.5 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 text-xs font-medium transition-colors">
+                <i class="fa-solid fa-crown text-slate-400 shrink-0 text-xs"></i>
+                <span class="truncate">Chính sách ưu đãi VIP</span>
+              </a>
+            </div>
+
+            <div class="pt-2 border-t border-slate-200 text-[10px] text-slate-400 text-center">
+              Dữ liệu Policy MB v3.2
+            </div>
+          </div>
+
+          <!-- RIGHT SUB-COLUMN: INTERACTIVE QA DIALOGUE & POLICIES -->
+          <div class="flex-1 flex flex-col bg-white overflow-hidden">
+            
+            <!-- CHAT SCROLL AREA -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-4">
+              
+              <!-- USER RM QUESTION -->
+              <div class="flex items-start justify-end gap-2.5">
+                <div class="bg-blue-50 border border-blue-100 text-slate-800 rounded-2xl rounded-tr-sm p-3 max-w-[85%] text-xs shadow-2xs">
+                  <p class="font-medium leading-relaxed">
+                    Lãi suất tiền gửi 12 tháng hiện tại của MB là bao nhiêu? Có ưu đãi gì cho khách VIP không?
+                  </p>
+                  <span class="text-[10px] text-slate-400 block text-right mt-1 font-mono">10:32</span>
+                </div>
+                <div class="w-7 h-7 rounded-full bg-blue-700 text-white font-bold text-[11px] flex items-center justify-center shrink-0">
+                  Y
+                </div>
+              </div>
+
+              <!-- AI BOT RESPONSE -->
+              <div class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                  <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                </div>
+
+                <div class="flex-1 max-w-[92%] space-y-3">
+                  <div class="bg-slate-50 border border-slate-200/90 rounded-2xl rounded-tl-sm p-4 text-xs shadow-2xs space-y-3">
+                    <p class="font-medium text-slate-800">
+                      Hiện tại, <strong class="text-blue-900">lãi suất tiền gửi tiết kiệm tại MB</strong> được áp dụng theo biểu phí mới nhất như sau:
+                    </p>
+
+                    <!-- Rate Table Comparison -->
+                    <div class="border border-slate-200 rounded-lg overflow-hidden bg-white shadow-2xs">
+                      <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                          <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-600">
+                            <th class="py-2 px-3">Kỳ hạn</th>
+                            <th class="py-2 px-3 text-center">Lãi suất cơ bản (%/năm)</th>
+                            <th class="py-2 px-3 text-center text-blue-700 bg-blue-50/50">Ưu đãi khách VIP (%/năm)</th>
+                          </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-slate-700 font-mono">
+                          <tr class="hover:bg-slate-50/50">
+                            <td class="py-2 px-3 font-sans font-medium text-slate-800">6 tháng</td>
+                            <td class="py-2 px-3 text-center">4.8</td>
+                            <td class="py-2 px-3 text-center font-bold text-blue-700 bg-blue-50/30">5.0</td>
+                          </tr>
+                          <tr class="bg-blue-50/20 hover:bg-blue-50/40">
+                            <td class="py-2 px-3 font-sans font-bold text-blue-900">12 tháng</td>
+                            <td class="py-2 px-3 text-center font-bold">5.4</td>
+                            <td class="py-2 px-3 text-center font-black text-blue-700 bg-blue-50/60 text-sm">5.8</td>
+                          </tr>
+                          <tr class="hover:bg-slate-50/50">
+                            <td class="py-2 px-3 font-sans font-medium text-slate-800">24 tháng</td>
+                            <td class="py-2 px-3 text-center">5.6</td>
+                            <td class="py-2 px-3 text-center font-bold text-blue-700 bg-blue-50/30">6.0</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <!-- Conditions & Requirements -->
+                    <div class="space-y-1.5 pt-1 text-slate-700">
+                      <span class="font-bold text-slate-900 text-xs block">Điều kiện áp dụng:</span>
+                      <ul class="list-disc pl-4 space-y-1 text-[11px] text-slate-600">
+                        <li class="">Khách hàng ưu tiên (VIP) theo phân hạng quy định của MB.</li>
+                        <li class="">Số tiền gửi tối thiểu: <strong class="text-slate-800">500 triệu đồng</strong>.</li>
+                        <li class="">Áp dụng cho sản phẩm <em>Tiền gửi tiết kiệm thường tại quầy hoặc App</em>.</li>
+                      </ul>
+                    </div>
+
+                    <!-- Source & Actions Bar -->
+                    <div class="pt-2 border-t border-slate-200/80 flex items-center justify-between text-[11px]">
+                      <span class="text-slate-500 font-mono">
+                        Hiệu lực: <strong class="text-slate-700">01/10/2025</strong>
+                      </span>
+                      <span class="text-blue-700 font-medium cursor-pointer hover:underline flex items-center gap-1">
+                        Nguồn: MB Policy Center v3.2 <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                      </span>
+                    </div>
+
+                    <!-- CTA Actions -->
+                    <div class="flex items-center gap-2 pt-1">
+                      <button class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-semibold shadow-2xs transition-colors flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-contract text-[10px]"></i>
+                        Xem chính sách chi tiết
+                      </button>
+                      <button class="px-3 py-1.5 bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-md text-xs font-medium shadow-2xs transition-colors flex items-center gap-1.5">
+                        <i class="fa-solid fa-code-compare text-[10px]"></i>
+                        So sánh sản phẩm
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SUGGESTED PROMPT CHIPS -->
+              <div class="pt-2 pl-11">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-2">
+                  Gợi ý câu hỏi tiếp theo
+                </span>
+                <div class="flex flex-wrap gap-2">
+                  <button class="px-2.5 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-700 border border-slate-200 hover:border-blue-300 rounded-full text-[11px] text-slate-700 transition-all font-medium">
+                    Tất toán trước hạn thì lãi suất tính thế nào?
+                  </button>
+                  <button class="px-2.5 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-700 border border-slate-200 hover:border-blue-300 rounded-full text-[11px] text-slate-700 transition-all font-medium">
+                    Có sản phẩm nào lãi suất cao hơn không?
+                  </button>
+                  <button class="px-2.5 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-700 border border-slate-200 hover:border-blue-300 rounded-full text-[11px] text-slate-700 transition-all font-medium">
+                    Điều kiện trở thành khách VIP?
+                  </button>
+                  <button class="px-2.5 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-700 border border-slate-200 hover:border-blue-300 rounded-full text-[11px] text-slate-700 transition-all font-medium">
+                    So sánh với ngân hàng khác
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- CHAT INPUT BOTTOM BAR -->
+            <div class="p-3 bg-white border-t border-slate-200 shrink-0">
+              <div class="relative flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all">
+                <button title="Đính kèm tài liệu" class="text-slate-400 hover:text-slate-600 p-1 mr-1">
+                  <i class="fa-solid fa-paperclip text-xs"></i>
+                </button>
+                <input type="text" placeholder="Hỏi về sản phẩm, chính sách, lãi suất, quy trình phê duyệt..." class="flex-1 bg-transparent text-xs text-slate-800 placeholder-slate-400 focus:outline-none">
+                <div class="flex items-center gap-1.5 ml-2">
+                  <button title="AI Prompt mode" class="text-blue-600 hover:text-blue-800 p-1">
+                    <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                  </button>
+                  <button class="w-7 h-7 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center justify-center transition-colors shadow-2xs">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

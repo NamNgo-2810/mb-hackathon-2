@@ -1,0 +1,594 @@
+<!DOCTYPE html><html lang="vi" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>MB Advance - Kết quả cuộc gọi &amp; Phân tích AI</title>
+<!-- Tailwind CSS CDN v3 with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            mb: {
+              blue: '#0033a0',
+              primary: '#1d4ed8',
+              navy: '#0f172a',
+              accent: '#e11d48',
+              soft: '#eff6ff',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-layout">
+    /* Lock root frame to exactly 1440x1024 */
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 1440px;
+      height: 1024px;
+      overflow: hidden;
+      background-color: #f8fafc;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+<style data-purpose="scrollbar-styling">
+    /* Subtle custom scrollbar for inner scrollable panels */
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="flex flex-row bg-slate-50 text-slate-800 antialiased select-none overflow-hidden" style="width: 1500px; min-width: 1500px; max-width: 1500px; height: 1024px; min-height: 1024px; max-height: 1024px; overflow: hidden;">
+<!-- BEGIN: Sidebar -->
+<aside class="bg-white flex flex-col items-center justify-between py-4 shrink-0 border-r border-slate-200 z-30 h-full w-20" data-purpose="main-sidebar">
+<!-- Top Nav Group -->
+<div class="flex flex-col items-center w-full gap-4">
+<!-- MB Logo Container -->
+<div class="w-12 h-12 flex items-center justify-center p-1 bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden cursor-pointer" data-purpose="brand-logo">
+<img alt="MB Bank Logo" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMD-dvV2VNuiRfaxvwXbFiQlHLZRLt8WL0-tzPnkKZF-NZitOC5xHU1PS1EgoO4ohbVnyvwP2MkADxlGoP6-pRVe3ZsbKzN_vAEigNFKzkahH0qpHNMVsZ2HfpR-KgQ0KD8Unq6abkZOWj2vaznaE9GzCYcS6hE8gGl51yNSICroIu-EAA_IaQxM7Ou9XuzMeLvVHW-_hGkZStT9MaFF0s0_Aap80nETEHf8VasrRB1jDCzv7_JiA_Wg">
+</div>
+<!-- Navigation Icons List -->
+<nav aria-label="Main Navigation" class="flex flex-col items-center gap-1.5 w-full mt-2">
+<!-- Trang chủ -->
+<button class="w-10 h-10 rounded-xl flex items-center justify-center text-slate-500 hover:text-blue-600 hover:bg-slate-100 transition-all" title="Trang chủ" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+<!-- Tiềm năng bán -->
+<button class="w-10 h-10 rounded-xl flex items-center justify-center text-slate-500 hover:text-blue-600 hover:bg-slate-100 transition-all" title="Tiềm năng bán" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+<!-- Cơ hội bán -->
+<button class="w-10 h-10 rounded-xl flex items-center justify-center text-slate-500 hover:text-blue-600 hover:bg-slate-100 transition-all" title="Cơ hội bán" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+<!-- Khách hàng -->
+<button class="w-10 h-10 rounded-xl flex items-center justify-center text-slate-500 hover:text-blue-600 hover:bg-slate-100 transition-all" title="Khách hàng" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+<!-- Công việc -->
+<button class="w-10 h-10 rounded-xl flex items-center justify-center text-slate-500 hover:text-blue-600 hover:bg-slate-100 transition-all" title="Công việc" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+<!-- Báo cáo -->
+<button class="w-10 h-10 rounded-xl flex items-center justify-center text-slate-500 hover:text-blue-600 hover:bg-slate-100 transition-all" title="Báo cáo" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+<!-- Divider -->
+<div class="w-8 h-[1px] bg-slate-200 my-1"></div>
+<!-- AI Sales Coach Hub (Active Block) -->
+<div class="flex flex-col items-center gap-1 w-full relative">
+<!-- Main AI Module Icon Active -->
+<button class="w-11 h-11 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-600/30 transition-all" title="AI Sales Coach (Active)" type="button">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+<!-- Sub-items indicator dot -->
+<span class="text-[9px] font-bold text-blue-600 mt-0.5 tracking-tight scale-90">AI COACH</span>
+<!-- Secondary Coach Actions -->
+<button class="w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:text-blue-600 hover:bg-slate-100 transition-all mt-1" title="RM Coaching" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+<button class="w-9 h-9 rounded-lg flex items-center justify-center text-blue-600 bg-blue-50 border border-blue-200 transition-all" title="TNB / Call Analysis (Đang chọn)" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+</div>
+</nav>
+</div>
+<!-- Bottom RM User & Logout -->
+<div class="flex flex-col items-center gap-3 w-full pb-2">
+<!-- RM Avatar -->
+<div class="relative group cursor-pointer" title="RM: Hoàng Yến Chibi">
+<div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-700 to-indigo-500 text-white font-bold flex items-center justify-center text-sm shadow-sm ring-2 ring-blue-100">
+          Y
+        </div>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>
+</div>
+<!-- Logout Button -->
+<button class="w-9 h-9 rounded-xl flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-slate-100 transition-all" title="Đăng xuất" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+</div>
+</aside>
+<!-- END: Sidebar -->
+<!-- BEGIN: MainContentArea -->
+<main class="flex flex-col bg-slate-50 overflow-hidden flex-1" style="width: 1420px; min-width: 1420px; max-width: 1420px; height: 1024px; min-height: 1024px; max-height: 1024px; overflow: hidden;">
+<!-- BEGIN: TopBarNav -->
+<header class="h-16 px-6 bg-white border-b border-slate-200 flex items-center justify-between shrink-0 shadow-sm z-20" data-purpose="call-header">
+<!-- Left: Back Button, Title, Status & Metadata -->
+<div class="flex items-center gap-4">
+<button class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border border-blue-200 text-blue-600 bg-white hover:bg-blue-50 font-medium text-xs shadow-sm transition" type="button">
+<svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+    Quay lại
+  </button>
+<div class="h-5 w-[1px] bg-slate-200"></div>
+<div class="flex items-center gap-3">
+<h1 class="text-base font-bold text-slate-900 tracking-tight">Kết quả cuộc gọi</h1>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-600 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+      Đã kết nối
+    </span>
+<div class="flex items-center text-xs text-slate-500 font-normal">
+<span class="inline-flex items-center gap-1">Mã TNB: 
+        <a class="inline-flex items-center gap-1 font-mono font-semibold text-blue-600 hover:text-blue-800 hover:underline cursor-pointer bg-blue-50/70 hover:bg-blue-100/70 border border-blue-200/60 px-1.5 py-0.5 rounded transition" href="#" title="Nhấn để xem chi tiết Tiềm năng bán">
+          L120825003485
+          <svg class="w-3 h-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</span>
+<span class="text-slate-300 mx-2">|</span>
+<span class="">08/10/2026 10:32</span>
+<span class="text-slate-300 mx-2">|</span>
+<span class="">Thời lượng: <strong class="font-medium text-slate-700">08:45</strong></span>
+<span class="text-slate-300 mx-2">|</span>
+<span class="">RM: <strong class="font-medium text-slate-800">Hoàng Yến Chibi</strong></span>
+</div>
+</div>
+</div>
+<!-- Right: Action Buttons -->
+
+</header>
+<!-- END: TopBarNav -->
+<!-- BEGIN: WorkspaceDashboard (3 COLUMNS LAYOUT) -->
+<div class="w-full p-4 grid grid-cols-12 items-start gap-4" data-purpose="dashboard-3-blocks" style="height: 960px; max-height: 960px;">
+<!-- ============================================== -->
+<!-- BLOCK 1 (CỘT 1 - BÊN TRÁI): AI CALL SCORE ĐẶT DỌC -->
+<!-- Width: col-span-4 (~435px) -->
+<!-- ============================================== -->
+<section class="col-span-4 flex flex-col gap-3" data-purpose="block-ai-score-left" style="height: 928px; max-height: 928px;">
+<!-- Subcard 1: Thông tin Khách hàng tóm tắt -->
+<div class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm shrink-0">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 text-white font-bold flex items-center justify-center text-sm shadow-xs ring-2 ring-indigo-100 shrink-0">
+          PT
+        </div>
+<div>
+<div class="flex items-center gap-1.5">
+<h2 class="text-xs font-bold text-slate-900">Nguyễn Phương Thảo</h2>
+<span class="px-1.5 py-0.2 text-[9px] font-bold bg-amber-100 text-amber-800 border border-amber-300 rounded">VIP</span>
+</div>
+<div class="flex items-center gap-2 text-[11px] text-slate-500 font-medium">
+<span class="">INDIV-MASS Priority</span>
+<span class="">•</span>
+<span class="font-semibold text-slate-700">0361 624 367</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<span class="px-2 py-0.5 text-[10px] font-bold bg-rose-50 text-rose-600 border border-rose-200 rounded-full inline-flex items-center gap-1">
+          🔥 Hot Lead 9/10
+        </span>
+
+</div>
+</div>
+</div>
+<!-- Subcard 2: AI CALL SCORE Chi tiết đặt dọc -->
+<div class="bg-white rounded-xl border border-slate-200 flex-1 flex flex-col overflow-hidden shadow-sm">
+<!-- Header with Big Score Dial -->
+<div class="p-3.5 border-b border-slate-200 bg-slate-50/70 shrink-0">
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5"><svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg> AI SALES PERFORMANCE</h3>
+<span class="text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-200 px-2 py-0.5 rounded-full">Hạng A - Xuất sắc</span>
+</div>
+<!-- Big Circular Score Display -->
+<div class="flex items-center justify-around py-1">
+<div class="relative w-20 h-20 flex items-center justify-center">
+<svg class="w-20 h-20 transform -rotate-90" viewBox="0 0 36 36">
+<path class="text-slate-200" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-blue-600" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="92, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<div class="absolute flex flex-col items-center">
+<span class="text-2xl font-black text-slate-900 leading-none">92</span>
+<span class="text-[9px] text-slate-400 font-bold">/ 100</span>
+</div>
+</div>
+<div class="flex flex-col gap-1 text-[11px]">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="text-slate-600">Tone of Voice: <strong class="text-slate-900">Tích cực</strong></span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-blue-500"></span>
+<span class="text-slate-600">Tốc độ: <strong class="text-slate-900 font-mono">145 từ/phút</strong></span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+<span class="text-slate-600">Độ ngắt quãng: <strong class="text-slate-900">1.2s (Chuẩn)</strong></span>
+</div>
+</div>
+</div>
+</div>
+<!-- Evaluation Criteria List (Scrollable Area) -->
+<div class="flex-1 p-3.5 space-y-3 custom-scroll text-xs" style="overflow-y: auto;">
+<div>
+<div class="text-[11px] font-bold text-slate-800 mb-2 uppercase tracking-wide">Chi tiết tiêu chí chấm điểm</div>
+<div class="space-y-2.5">
+<!-- Item 1 -->
+<div>
+<div class="flex justify-between text-[11px] mb-1">
+<span class="text-slate-600">1. Chào hỏi &amp; Nhận diện KH</span>
+<span class="font-bold text-emerald-600 font-mono">10 / 10</span>
+</div>
+<div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+<div class="w-[100%] h-full bg-emerald-500 rounded-full"></div>
+</div>
+</div>
+<!-- Item 2 -->
+<div>
+<div class="flex justify-between text-[11px] mb-1">
+<span class="text-slate-600">2. Khai thác nhu cầu &amp; Số tiền</span>
+<span class="font-bold text-emerald-600 font-mono">10 / 10</span>
+</div>
+<div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+<div class="w-[100%] h-full bg-emerald-500 rounded-full"></div>
+</div>
+</div>
+<!-- Item 3 -->
+<div>
+<div class="flex justify-between text-[11px] mb-1">
+<span class="text-slate-600">3. Nắm vững chính sách &amp; Lãi suất</span>
+<span class="font-bold text-blue-600 font-mono">9.5 / 10</span>
+</div>
+<div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+<div class="w-[95%] h-full bg-blue-600 rounded-full"></div>
+</div>
+</div>
+<!-- Item 4 -->
+<div>
+<div class="flex justify-between text-[11px] mb-1">
+<span class="text-slate-600">4. Xử lý thắc mắc &amp; Thuyết phục</span>
+<span class="font-bold text-blue-600 font-mono">9.0 / 10</span>
+</div>
+<div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+<div class="w-[90%] h-full bg-blue-500 rounded-full"></div>
+</div>
+</div>
+<!-- Item 5 -->
+<div>
+<div class="flex justify-between text-[11px] mb-1">
+<span class="text-slate-600">5. Chốt cam kết &amp; Next Step</span>
+<span class="font-bold text-emerald-600 font-mono">9.5 / 10</span>
+</div>
+<div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+<div class="w-[95%] h-full bg-emerald-500 rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Coaching Tips Box -->
+<div class="pt-2 border-t border-slate-100 space-y-2">
+<div class="text-[11px] font-bold text-slate-800 uppercase tracking-wide flex items-center gap-1"><svg class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg> AI INSIGHT</div>
+<!-- Positive Point -->
+<div class="bg-emerald-50/70 border border-emerald-200 rounded-lg p-2.5 text-[11px]">
+<span class="font-bold text-emerald-800 block mb-0.5">💡 Điểm sáng nổi bật:</span>
+<p class="text-emerald-900 leading-snug">
+            RM nắm rất rõ chính sách VIP v3.2, khéo léo giải tỏa lăn tăn điều kiện và hướng dẫn khách mở trên App thành công.
+          </p>
+</div>
+<!-- Improvement Suggestion -->
+<div class="bg-blue-50/70 border border-blue-200 rounded-lg p-2.5 text-[11px]">
+<span class="font-bold text-blue-900 block mb-0.5">🎯 Gợi ý nâng cao (Cross-sell):</span>
+<p class="text-blue-950 leading-snug">
+            Có thể giới thiệu thêm tính năng tích lũy linh hoạt hoặc thẻ tín dụng hoàn tiền khi khách duy trì số dư tiền gửi 500tr.
+          </p>
+</div>
+</div>
+</div>
+<!-- Footer Score Save Action -->
+<div class="p-3 bg-slate-50 border-t border-slate-200 shrink-0"><div class="flex items-center justify-between text-xs px-1"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span class="text-[11px] font-semibold text-slate-700">Đã hoàn tất đánh giá cuộc gọi</span></div></div></div>
+</div>
+</section>
+<!-- END BLOCK 1 -->
+<!-- ============================================== -->
+<!-- BLOCK 2 (CỘT 2 - Ở GIỮA): TRANSCRIPT & AUDIO   -->
+<!-- Width: col-span-4 (~435px) -->
+<!-- ============================================== -->
+<section class="col-span-4 bg-white rounded-xl border border-slate-200 flex flex-col overflow-hidden shadow-sm" data-purpose="block-transcript-middle" style="height: 928px; max-height: 928px;">
+<!-- Header & Audio Player -->
+<div class="p-3.5 border-b border-slate-200 bg-slate-50/80 shrink-0">
+<div class="flex items-center justify-between mb-2.5">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+<h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Phân tích hội thoại</h3>
+</div>
+<span class="text-[10px] bg-slate-200 text-slate-700 font-semibold px-2 py-0.5 rounded">AI Voice-to-Text</span>
+</div>
+<!-- Compact Audio Player Widget -->
+<div class="bg-white border border-slate-200 rounded-lg p-2.5 shadow-xs"><div class="flex items-center gap-3"><button class="w-9 h-9 rounded-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center shrink-0 shadow-md shadow-blue-600/30 transition-all cursor-pointer relative group" type="button" title="Phát / Tạm dừng ghi âm"><span class="absolute inset-0 rounded-full bg-blue-500 animate-ping opacity-25"></span><svg class="w-4 h-4 translate-x-0.5 relative z-10" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></button><div class="flex-1 flex flex-col gap-1.5"><div class="h-6 flex items-center gap-1 px-2 bg-slate-50 rounded-md border border-slate-200/80 overflow-hidden"><div class="w-1 h-2 bg-blue-500 rounded-full voice-bar-anim" style="animation-duration: 0.8s; animation-delay: 0.1s;"></div><div class="w-1 h-3.5 bg-blue-600 rounded-full voice-bar-anim" style="animation-duration: 1.1s; animation-delay: 0.25s;"></div><div class="w-1 h-4 bg-blue-700 rounded-full voice-bar-anim" style="animation-duration: 0.9s; animation-delay: 0.4s;"></div><div class="w-1 h-2 bg-blue-500 rounded-full voice-bar-anim" style="animation-duration: 1.2s; animation-delay: 0.15s;"></div><div class="w-1 h-5 bg-blue-700 rounded-full voice-bar-anim" style="animation-duration: 0.75s; animation-delay: 0.3s;"></div><div class="w-1 h-3 bg-blue-600 rounded-full voice-bar-anim" style="animation-duration: 1.05s; animation-delay: 0.5s;"></div><div class="w-1 h-4 bg-blue-600 rounded-full voice-bar-anim" style="animation-duration: 0.85s; animation-delay: 0.2s;"></div><div class="w-1 h-2 bg-blue-400 rounded-full voice-bar-anim" style="animation-duration: 1.15s; animation-delay: 0.35s;"></div><div class="w-1 h-4 bg-slate-300 rounded-full"></div><div class="w-1 h-5 bg-slate-400 rounded-full"></div><div class="w-1 h-3 bg-slate-300 rounded-full"></div><div class="w-1 h-2 bg-slate-300 rounded-full"></div><div class="w-1 h-3.5 bg-slate-300 rounded-full"></div><div class="w-1 h-1.5 bg-slate-200 rounded-full"></div><div class="w-1 h-4 bg-slate-300 rounded-full"></div><div class="w-1 h-2 bg-slate-300 rounded-full"></div><div class="w-1 h-4.5 bg-slate-300 rounded-full"></div><div class="w-1 h-3 bg-slate-300 rounded-full"></div><div class="w-1 h-1.5 bg-slate-200 rounded-full"></div><div class="w-1 h-3.5 bg-slate-300 rounded-full"></div></div><div class="flex justify-between items-center px-0.5"><div class="flex items-center gap-1 font-mono text-[10px]"><span class="font-bold text-blue-700 bg-blue-50 px-1 py-0.2 rounded border border-blue-200 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>01:15</span><span class="text-slate-400">/</span><span class="font-medium text-slate-500">04:18</span></div></div></div><div class="flex flex-col items-center gap-1 shrink-0"><span class="text-[10px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-md cursor-pointer transition border border-slate-200 shadow-xs" title="Tốc độ phát">1.0x</span></div></div></div>
+</div>
+<!-- Transcript Dialogue List (Scrollable Area) -->
+<div class="flex-1 p-3.5 space-y-3 custom-scroll text-xs" style="overflow-y: auto;">
+<!-- Message 1: RM -->
+<div class="flex items-start gap-2">
+<span class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">RM</span>
+<div class="flex-1 bg-blue-50/50 border border-blue-100 rounded-xl rounded-tl-none p-2.5">
+<div class="flex justify-between items-center mb-1">
+<span class="font-bold text-[11px] text-blue-900">Yến RM</span>
+<span class="text-[10px] text-slate-400 font-mono">00:15</span>
+</div>
+<p class="text-slate-700 leading-relaxed text-[11px]">
+          "Em chào chị Thảo, em là Yến bên MB. Hôm nay em gọi để trao đổi thêm về nhu cầu gửi tiền của chị ạ."
+        </p>
+</div>
+</div>
+<!-- Message 2: Customer -->
+<div class="flex items-start gap-2">
+<span class="w-6 h-6 rounded-full bg-purple-100 text-purple-700 font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">KH</span>
+<div class="flex-1 bg-slate-50 border border-slate-200 rounded-xl rounded-tl-none p-2.5">
+<div class="flex justify-between items-center mb-1">
+<span class="font-bold text-[11px] text-purple-900">Chị Thảo</span>
+<span class="text-[10px] text-slate-400 font-mono">00:45</span>
+</div>
+<p class="text-slate-700 leading-relaxed text-[11px]">
+          "Chào em, hiện tại chị đang có khoảng <span class="font-semibold text-emerald-700 bg-emerald-50 px-1 rounded">500 triệu</span> đáo hạn, muốn tìm ngân hàng lãi suất tốt kỳ hạn 12 tháng."
+        </p>
+</div>
+</div>
+<!-- Message 3: RM -->
+<div class="flex items-start gap-2 relative ring-2 ring-blue-100 rounded-xl p-0.5 bg-blue-50/70 border border-blue-200 transition-all"><span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5 shadow-xs">RM</span><div class="flex-1 bg-white border border-blue-200/80 rounded-xl rounded-tl-none p-2.5 shadow-xs"><div class="flex justify-between items-center mb-1"><div class="flex items-center gap-1.5"><span class="font-bold text-[11px] text-blue-900">Yến RM</span><span class="inline-flex items-center gap-1 px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-blue-100 text-blue-700 border border-blue-200 animate-pulse"><svg class="w-2.5 h-2.5 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><path d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 5.343a1 1 0 011.414 0A9.972 9.972 0 0118 10a9.972 9.972 0 01-1.929 4.657 1 1 0 01-1.414-1.414A7.971 7.971 0 0016 10c0-1.246-.285-2.427-.757-3.243a1 1 0 010-1.414z"></path></svg>Đang phát</span></div><span class="text-[10px] text-blue-700 font-bold font-mono bg-blue-50 px-1 py-0.2 rounded border border-blue-100">01:20</span></div><p class="text-slate-800 leading-relaxed text-[11px]">"Dạ hiện tại MB đang có gói Tiết kiệm dài hạn với lãi suất ưu đãi khách VIP là <span class="font-semibold text-blue-700 bg-blue-100/50 px-1 rounded">5.8%/năm</span> cho kỳ hạn 12 tháng..."</p></div></div>
+<!-- Message 4: Customer -->
+<div class="flex items-start gap-2">
+<span class="w-6 h-6 rounded-full bg-purple-100 text-purple-700 font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">KH</span>
+<div class="flex-1 bg-slate-50 border border-slate-200 rounded-xl rounded-tl-none p-2.5">
+<div class="flex justify-between items-center mb-1">
+<span class="font-bold text-[11px] text-purple-900">Chị Thảo</span>
+<span class="text-[10px] text-slate-400 font-mono">02:15</span>
+</div>
+<p class="text-slate-700 leading-relaxed text-[11px]">
+          "Lãi suất 5.8% là áp dụng cho mọi chi nhánh hay cần điều kiện gì không em?"
+        </p>
+</div>
+</div>
+<!-- AI Intent Badge Alert -->
+<div class="my-1.5 p-2 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-2">
+<span class="text-amber-600 mt-0.5 shrink-0">
+<svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+<path clip-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" fill-rule="evenodd"></path>
+</svg>
+</span>
+<div class="text-[11px]">
+<span class="font-bold text-amber-900">AI Nhận diện:</span>
+<span class="text-amber-800"> Khách hàng hỏi điều kiện VIP &amp; mức tiền gửi tối thiểu.</span>
+</div>
+</div>
+<!-- Message 5: RM -->
+<div class="flex items-start gap-2">
+<span class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">RM</span>
+<div class="flex-1 bg-blue-50/50 border border-blue-100 rounded-xl rounded-tl-none p-2.5">
+<div class="flex justify-between items-center mb-1">
+<span class="font-bold text-[11px] text-blue-900">Yến RM</span>
+<span class="text-[10px] text-slate-400 font-mono">02:50</span>
+</div>
+<p class="text-slate-700 leading-relaxed text-[11px]">
+          "Chị là khách hàng ưu tiên của MB nên chỉ cần số tiền từ 500 triệu là được hưởng mức 5.8% ngay trên App chị nhé."
+        </p>
+</div>
+</div>
+<!-- Message 6: Customer -->
+<div class="flex items-start gap-2">
+<span class="w-6 h-6 rounded-full bg-purple-100 text-purple-700 font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">KH</span>
+<div class="flex-1 bg-slate-50 border border-slate-200 rounded-xl rounded-tl-none p-2.5">
+<div class="flex justify-between items-center mb-1">
+<span class="font-bold text-[11px] text-purple-900">Chị Thảo</span>
+<span class="text-[10px] text-slate-400 font-mono">03:40</span>
+</div>
+<p class="text-slate-700 leading-relaxed text-[11px]">
+          "Thế để thứ 2 tuần tới tiền về chị thao tác mở trên App, có gì em hỗ trợ chị nhé."
+        </p>
+</div>
+</div>
+<!-- Message 7: RM -->
+<div class="flex items-start gap-2">
+<span class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">RM</span>
+<div class="flex-1 bg-blue-50/50 border border-blue-100 rounded-xl rounded-tl-none p-2.5">
+<div class="flex justify-between items-center mb-1">
+<span class="font-bold text-[11px] text-blue-900">Yến RM</span>
+<span class="text-[10px] text-slate-400 font-mono">04:10</span>
+</div>
+<p class="text-slate-700 leading-relaxed text-[11px]">
+          "Dạ vâng chị, em sẽ gửi link hướng dẫn qua Zalo/SMS cho chị ngay ạ. Em cảm ơn chị!"
+        </p>
+</div>
+</div>
+</div>
+<!-- Transcript Footer Status -->
+<div class="px-3.5 py-2.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-500 shrink-0">
+<span class="flex items-center gap-1.5 font-medium text-emerald-700">
+<svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+      Khớp âm thanh 100%
+    </span>
+<button class="text-blue-600 font-medium hover:underline text-[10px] inline-flex items-center gap-1" type="button">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+      Tải file audio (.wav)
+    </button>
+</div>
+</section>
+<!-- END BLOCK 2 -->
+<!-- ============================================== -->
+<!-- BLOCK 3 (CỘT 3 - BÊN PHẢI): AI AUTO KEYIN & CRM -->
+<!-- Width: col-span-4 (~435px) -->
+<!-- ============================================== -->
+<section class="col-span-4 bg-white rounded-xl border border-slate-200 flex flex-col shadow-sm" data-purpose="block-ai-keyin-crm-right" style="height: 928px; max-height: 928px; overflow: hidden;">
+<!-- Header -->
+<div class="p-3.5 border-b border-slate-200 bg-gradient-to-r from-blue-50/70 via-indigo-50/40 to-white shrink-0">
+<div class="flex items-center justify-between mb-1.5"><div class="flex items-center gap-1.5"><span class="w-5 h-5 rounded-md bg-blue-600 text-white flex items-center justify-center shadow-xs"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></span><h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">AI Auto Keyin</h3></div><div class="flex items-center gap-1.5"></div></div>
+<p class="text-[11px] text-slate-500">Tự động trích xuất các trường thông tin CRM từ cuộc gọi</p>
+</div>
+<!-- CRM Extracted Fields Form (Scrollable Area) -->
+<div class="flex-1 p-3.5 space-y-2.5 custom-scroll text-xs" style="overflow-y: auto;">
+<!-- Field 1: Amount -->
+<div class="bg-slate-50 border border-slate-200 rounded-lg p-2.5">
+<div class="flex items-center justify-between mb-1">
+<span class="text-[11px] font-semibold text-slate-600">Nhu cầu gửi tiền:</span>
+<span class="text-[9px] font-bold bg-blue-100 text-blue-700 px-1.5 py-0.2 rounded">Trích xuất từ 00:45</span>
+</div>
+<div class="font-mono font-bold text-sm text-emerald-700 bg-white border border-slate-200 rounded px-2.5 py-1.5 flex items-center justify-between">
+<span class="">500.000.000 VNĐ</span>
+<svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</div>
+</div>
+<!-- Field 2: Tenor & Interest -->
+<div class="grid grid-cols-2 gap-2">
+<div class="bg-slate-50 border border-slate-200 rounded-lg p-2">
+<span class="text-[10px] font-semibold text-slate-600 block mb-1">Kỳ hạn:</span>
+<div class="bg-white border border-slate-200 rounded px-2 py-1 font-bold text-xs text-slate-800">
+          12 Tháng
+        </div>
+</div>
+<div class="bg-slate-50 border border-slate-200 rounded-lg p-2">
+<span class="text-[10px] font-semibold text-slate-600 block mb-1">Lãi suất chốt:</span>
+<div class="bg-white border border-slate-200 rounded px-2 py-1 font-bold text-xs text-blue-700">
+          5.8% / năm
+        </div>
+</div>
+</div>
+<!-- Field 3: Product -->
+<div class="bg-slate-50 border border-slate-200 rounded-lg p-2.5">
+<span class="text-[11px] font-semibold text-slate-600 block mb-1">Sản phẩm chốt:</span>
+<div class="bg-white border border-slate-200 rounded px-2.5 py-1.5 font-semibold text-xs text-slate-800 truncate">
+        Tiết kiệm dài hạn VIP - Kỳ hạn 12T
+      </div>
+</div>
+<!-- Field 4: Source of Fund -->
+<div class="bg-slate-50 border border-slate-200 rounded-lg p-2.5">
+<span class="text-[11px] font-semibold text-slate-600 block mb-1">Nguồn tiền luân chuyển:</span>
+<div class="bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800">
+        Đáo hạn từ TCB chuyển về MB
+      </div>
+</div>
+<!-- Field 5: Target Date & Channel -->
+<div class="grid grid-cols-2 gap-2">
+<div class="bg-slate-50 border border-slate-200 rounded-lg p-2">
+<span class="text-[10px] font-semibold text-slate-600 block mb-1">Thời gian dự kiến:</span>
+<div class="bg-white border border-slate-200 rounded px-2 py-1 font-bold text-[11px] text-slate-800">
+          Thứ 2 (27/11/2025)
+        </div>
+</div>
+<div class="bg-slate-50 border border-slate-200 rounded-lg p-2">
+<span class="text-[10px] font-semibold text-slate-600 block mb-1">Kênh thực hiện:</span>
+<div class="bg-white border border-slate-200 rounded px-2 py-1 font-bold text-[11px] text-indigo-700">
+          App MBBank (Digital)
+        </div>
+</div>
+</div>
+<!-- Field 6: Objections Solved -->
+<div class="bg-slate-50 border border-slate-200 rounded-lg p-2.5">
+<span class="text-[11px] font-semibold text-slate-600 block mb-1">Băn khoăn / Phản đối:</span>
+<div class="bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-700">
+<span class="text-emerald-700 font-semibold">✓ Đã giải đáp:</span> Điều kiện áp dụng mức lãi suất 5.8% cho khách VIP
+      </div>
+</div>
+<!-- Field 7: Next Best Action -->
+<div class="bg-blue-50/70 border border-blue-200 rounded-lg p-2.5">
+<span class="text-[11px] font-bold text-blue-900 mb-1 flex items-center gap-1">
+<svg class="w-3.5 h-3.5 text-blue-700" fill="currentColor" viewBox="0 0 20 20">
+<path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 00-1.414z" fill-rule="evenodd"></path>
+</svg>
+        Next Sales&nbsp; Action (Tự động tạo Task):
+      </span>
+<div class="text-[11px] text-blue-950 bg-white p-2 rounded border border-blue-200/60 leading-snug space-y-1">
+<div class="">• Gửi SMS/Zalo tài liệu hướng dẫn mở sổ trên App</div>
+<div class="">• Gọi điện thoại nhắc nạp tiền vào sáng thứ Hai (09:00)</div>
+</div>
+</div>
+<!-- Field 8: RM Notes Compact -->
+<div class="bg-slate-50 border border-slate-200 rounded-lg p-2.5">
+<div class="flex items-center justify-between mb-1">
+<span class="text-[11px] font-semibold text-slate-700 flex items-center gap-1">
+<svg class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          Ghi chú của RM:
+        </span>
+
+</div>
+<textarea class="w-full p-2 text-[11px] text-slate-700 border border-slate-200 rounded bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500 resize-none leading-relaxed h-14" placeholder="Ghi chú...">KH rất thiện chí, yêu cầu chính sách ưu đãi lãi suất khách VIP (+0.4%/năm). Đã hẹn gửi bảng tính chi tiết qua Zalo và gọi lại sáng 22/11 để chốt mở sổ online.</textarea>
+</div><div class="bg-blue-50/70 border border-blue-200 rounded-xl p-3.5 space-y-3 mt-3 shadow-xs"><div class="flex items-center justify-between pb-2 border-b border-blue-200/60"><div class="flex items-center gap-2"><span class="w-6 h-6 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></span><span class="text-xs font-bold text-slate-800">Đánh giá mức độ chính xác &amp; phù hợp</span></div></div><div class="space-y-1.5"><div class="flex items-center justify-between text-[10px] font-semibold text-slate-600"><span class="">Thang điểm đánh giá:</span><span class="text-blue-700 font-bold">9/10 - Rất chính xác</span></div><div class="grid grid-cols-10 gap-1"><button type="button" class="h-7 flex items-center justify-center rounded text-[11px] font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition" title="1 - Rất kém">1</button><button type="button" class="h-7 flex items-center justify-center rounded text-[11px] font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition" title="2 - Kém">2</button><button type="button" class="h-7 flex items-center justify-center rounded text-[11px] font-bold text-amber-600 bg-amber-50 hover:bg-amber-100 border border-amber-200 transition" title="3 - Chưa chuẩn">3</button><button type="button" class="h-7 flex items-center justify-center rounded text-[11px] font-bold text-amber-600 bg-amber-50 hover:bg-amber-100 border border-amber-200 transition" title="4 - Cần chỉnh nhiều">4</button><button type="button" class="h-7 flex items-center justify-center rounded text-[11px] font-bold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 transition" title="5 - Trung bình">5</button><button type="button" class="h-7 flex items-center justify-center rounded text-[11px] font-bold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 transition" title="6 - Khá">6</button><button type="button" class="h-7 flex items-center justify-center rounded text-[11px] font-bold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 transition" title="7 - Khá tốt">7</button><button type="button" class="h-7 flex items-center justify-center rounded text-[11px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition" title="8 - Tốt">8</button><button type="button" class="h-7 flex items-center justify-center rounded text-[11px] font-black text-white bg-blue-600 shadow-sm ring-2 ring-blue-300 border border-blue-600 transition scale-105" title="9 - Rất chính xác (Đang chọn)">9</button><button type="button" class="h-7 flex items-center justify-center rounded text-[11px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition" title="10 - Hoàn hảo">10</button></div><div class="flex justify-between items-center text-[9px] text-slate-400 font-medium px-0.5"><span class="">1: Chưa khớp</span><span class="">10: Chuẩn tuyệt đối</span></div></div><div class="flex flex-wrap gap-1.5 pt-0.5"><button type="button" class="px-2 py-1 rounded-md bg-blue-100 text-blue-700 text-[10px] font-semibold border border-blue-200 flex items-center gap-1 hover:bg-blue-200 transition"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>Trích xuất đúng hạn mức</button><button type="button" class="px-2 py-1 rounded-md bg-blue-100 text-blue-700 text-[10px] font-semibold border border-blue-200 flex items-center gap-1 hover:bg-blue-200 transition"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>Chuẩn kênh App MB</button><button type="button" class="px-2 py-1 rounded-md bg-white text-slate-700 hover:bg-slate-100 text-[10px] font-medium border border-slate-200 transition">+ Chuẩn kỳ hạn</button></div><div class="space-y-1.5 pt-1"><label class="text-[11px] font-semibold text-slate-700 flex items-center justify-between"><span class="">Nhập ý kiến &amp; phản hồi chi tiết:</span><span class="text-[10px] text-blue-600 font-medium">Góp ý AI</span></label><textarea rows="2" class="w-full px-3 py-2 text-xs text-slate-700 bg-white border border-slate-200 rounded-lg shadow-xs focus:ring-1 focus:ring-blue-500 focus:border-blue-500 leading-relaxed resize-none" placeholder="Nhập lý do hoặc nhận xét về độ chính xác của AI...">KH rất thiện chí, yêu cầu chính sách ưu đãi lãi suất khách VIP (+0.4%/năm). Đã hẹn gửi bảng tính chi tiết qua Zalo và gọi lại sáng 22/11 để chốt mở sổ online.</textarea></div></div>
+</div>
+<!-- Footer Control & Sync Action -->
+<div class="p-3 bg-slate-50 border-t border-slate-200 shrink-0"><button type="button" class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-2 shadow-md shadow-blue-600/20 transition cursor-pointer"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>Lưu hồ sơ cuộc gọi &amp; Đồng bộ CRM</button></div>
+</section>
+<!-- END BLOCK 3 -->
+</div>
+<!-- END: WorkspaceDashboard (3 Blocks Layout) -->
+</main>
+<!-- END: MainContentArea -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

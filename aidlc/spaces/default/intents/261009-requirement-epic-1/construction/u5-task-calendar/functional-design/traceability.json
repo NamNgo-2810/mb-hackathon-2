@@ -1,0 +1,44 @@
+{
+  "stage": "functional-design",
+  "unit": "u5-task-calendar",
+  "upstream_ids": [
+    "AC3.2.1",
+    "AC3.2.2",
+    "AC3.2.3",
+    "AC3.2.4",
+    "AC3.2.5",
+    "AC3.3.1",
+    "AC3.3.2",
+    "AC3.3.3",
+    "AC3.3.4",
+    "AC3.3.5",
+    "AC3.4.1",
+    "AC3.4.2"
+  ],
+  "coverage": [
+    { "id": "AC3.2.1", "status": "OK", "target": "BR4.6, BR2.3, BR4.2" },
+    { "id": "AC3.2.2", "status": "OK", "target": "BR4.4" },
+    { "id": "AC3.2.3", "status": "OK", "target": "BR4.3" },
+    { "id": "AC3.2.4", "status": "OK", "target": "BR4.4" },
+    { "id": "AC3.2.5", "status": "OK", "target": "BR4.6" },
+    { "id": "AC3.3.1", "status": "OK", "target": "BR5.1" },
+    { "id": "AC3.3.2", "status": "OK", "target": "BR5.2" },
+    { "id": "AC3.3.3", "status": "OK", "target": "BR5.2" },
+    { "id": "AC3.3.4", "status": "OK", "target": "BR5.3" },
+    { "id": "AC3.3.5", "status": "OK", "target": "BR3.1" },
+    { "id": "AC3.4.1", "status": "OK", "target": "BR4.5, BR4.1" },
+    { "id": "AC3.4.2", "status": "OK", "target": "BR4.5" }
+  ],
+  "reverse": [
+    { "id": "BR1.1", "status": "N/A", "target": "Quy tắc quyền sở hữu nền tảng (FR1.4); áp cho mọi endpoint, không gắn một AC riêng của US3" },
+    { "id": "BR1.2", "status": "N/A", "target": "Quy ước phân biệt 404/403 trong phạm vi RM (FR1.4); quy tắc kỹ thuật, không có AC riêng" },
+    { "id": "BR1.3", "status": "N/A", "target": "Kiểm tra lead thuộc RM khi gắn công việc (FR1.4, I1); ràng buộc nền tảng, không có AC US3 riêng" },
+    { "id": "BR2.1", "status": "OK", "target": "AC2.3.6 (idempotent khi lưu keyin) — AC thuộc US2.3 của U4, ở đây là ràng buộc I4 nên ghi nhận ở reverse" },
+    { "id": "BR2.2", "status": "N/A", "target": "Quyết định của stage: clientKey bắt buộc cho createFromCall (I4); chốt lại ghi chú mở Contract Design, không có AC riêng" },
+    { "id": "BR2.3", "status": "N/A", "target": "Ranh giới dữ liệu: Task mang origin AI_FROM_CALL + bản sao tóm tắt AI (FR5.2, domain-design); đã dùng ở AC3.2.1, không cần AC riêng" },
+    { "id": "BR3.2", "status": "N/A", "target": "Ràng buộc enum type KHAC chỉ cho việc không gắn lead (FR5.3, A4); quy tắc dữ liệu, không có AC riêng" },
+    { "id": "BR4.1", "status": "N/A", "target": "Giới hạn khoảng truy vấn 42 ngày (C4); ràng buộc kỹ thuật phục vụ AC3.4.1, không có AC riêng" },
+    { "id": "BR6.1", "status": "N/A", "target": "Quy ước thời gian ISO-8601 +07:00 / Asia/Ho_Chi_Minh (contract-summary, U1 BR6.2); quy ước dữ liệu toàn hệ, không có AC riêng" },
+    { "id": "BR6.2", "status": "N/A", "target": "Kiểm tra hợp lệ đầu vào ở biên (NFR2); quy tắc phi chức năng, không có AC riêng" }
+  ]
+}

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kết quả cuộc gọi &amp; Phân tích AI - MB Advance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style> body { font-family: 'Inter', sans-serif; } .custom-scroll::-webkit-scrollbar { width: 5px; } .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; } </style>
+</head>
+<body class="flex flex-row h-screen w-full bg-[#f8fafc] text-slate-800 antialiased">
+  <!-- Sidebar -->
+  <aside class="w-20 bg-white border-r border-slate-200 flex flex-col items-center py-4 shrink-0 z-20 shadow-sm">
+    <div class="w-11 h-11 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md" title="AI Sales Coach">
+      <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
+    </div>
+    <span class="text-[9px] font-bold text-blue-600 mt-1">AI COACH</span>
+  </aside>
+
+  <main class="flex-1 flex flex-col h-screen overflow-hidden bg-[#f8fafc]">
+    <!-- Header -->
+    <header class="h-16 px-6 bg-white border-b border-slate-200 flex items-center justify-between shrink-0 shadow-sm z-20">
+      <div class="flex items-center gap-4">
+        <button class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border border-blue-200 text-blue-600 bg-white hover:bg-blue-50 font-medium text-xs shadow-sm" type="button" data-testid="back-button" onclick="history.back()">
+          <i class="fa-solid fa-arrow-left text-[11px]"></i> Quay lại
+        </button>
+        <div class="h-5 w-[1px] bg-slate-200"></div>
+        <div class="flex items-center gap-3">
+          <h1 class="text-base font-bold text-slate-900 tracking-tight">Kết quả cuộc gọi</h1>
+          <span id="pipeline-pill" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-50 text-slate-600 border border-slate-200" data-testid="pipeline-status">
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span><span data-testid="pipeline-status-text">Đang tải…</span>
+          </span>
+          <div class="flex items-center text-xs text-slate-500">
+            <span>Mã TNB: <strong class="font-mono font-semibold text-blue-600" data-testid="s3-lead-code">...</strong></span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Progress bar (3 steps, auto-updates: BR7.3) -->
+    <div class="px-6 py-2 bg-white border-b border-slate-200 shrink-0">
+      <div class="flex items-center gap-3 text-[11px]" data-testid="pipeline-steps">
+        <div class="flex items-center gap-1.5" data-step="FETCH_RECORDING"><span class="step-dot w-2 h-2 rounded-full bg-slate-300"></span><span>Đang lấy ghi âm</span></div>
+        <div class="flex-1 h-[2px] bg-slate-200"></div>
+        <div class="flex items-center gap-1.5" data-step="TRANSCRIBE"><span class="step-dot w-2 h-2 rounded-full bg-slate-300"></span><span>Đang chuyển giọng nói</span></div>
+        <div class="flex-1 h-[2px] bg-slate-200"></div>
+        <div class="flex items-center gap-1.5" data-step="ANALYZE"><span class="step-dot w-2 h-2 rounded-full bg-slate-300"></span><span>Đang phân tích AI</span></div>
+      </div>
+    </div>
+
+    <div id="error-banner" class="hidden bg-red-50 border-b border-red-200 text-red-700 px-6 py-2 text-[11px]" data-testid="error-banner"></div>
+
+    <!-- 3-column dashboard -->
+    <div class="flex-1 p-4 grid grid-cols-12 gap-4 overflow-hidden">
+      <!-- Column 1: AI score (BR3.x, WF3) -->
+      <section class="col-span-4 bg-white rounded-xl border border-slate-200 flex flex-col overflow-hidden shadow-sm" data-testid="col-score">
+        <div class="p-3.5 border-b border-slate-200 bg-slate-50/70 shrink-0">
+          <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-star text-amber-500"></i> AI Sales Performance</h3>
+          <div class="flex items-center justify-around py-2">
+            <div class="relative w-20 h-20 flex items-center justify-center">
+              <svg class="w-20 h-20 transform -rotate-90" viewBox="0 0 36 36">
+                <path class="text-slate-200" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+                <path id="score-arc" class="text-blue-600" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="0, 100" stroke-linecap="round" stroke-width="3.5"></path>
+              </svg>
+              <div class="absolute flex flex-col items-center">
+                <span class="text-2xl font-black text-slate-900 leading-none" data-testid="score-total">--</span>
+                <span class="text-[9px] text-slate-400 font-bold">/ 100</span>
+              </div>
+            </div>
+            <div class="flex flex-col gap-1 text-[11px]">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-200 w-max" data-testid="score-grade">Hạng --</span>
+              <span class="text-slate-600 mt-1">Giọng điệu: <strong class="text-slate-900" data-testid="score-tone">--</strong></span>
+            </div>
+          </div>
+        </div>
+        <div class="flex-1 p-3.5 space-y-3 custom-scroll text-xs overflow-y-auto">
+          <div class="text-[11px] font-bold text-slate-800 uppercase tracking-wide">Chi tiết tiêu chí chấm điểm</div>
+          <div id="criteria-list" class="space-y-2.5" data-testid="criteria-list"></div>
+          <div class="pt-2 border-t border-slate-100 space-y-2">
+            <div class="text-[11px] font-bold text-slate-800 uppercase tracking-wide flex items-center gap-1"><i class="fa-solid fa-lightbulb text-amber-500"></i> AI Insight</div>
+            <div class="bg-emerald-50/70 border border-emerald-200 rounded-lg p-2.5 text-[11px]">
+              <span class="font-bold text-emerald-800 block mb-0.5">💡 Điểm sáng nổi bật:</span>
+              <p class="text-emerald-900 leading-snug" data-testid="insight-strength">--</p>
+            </div>
+            <div class="bg-blue-50/70 border border-blue-200 rounded-lg p-2.5 text-[11px]">
+              <span class="font-bold text-blue-900 block mb-0.5">🎯 Gợi ý nâng cao:</span>
+              <p class="text-blue-950 leading-snug" data-testid="insight-improvement">--</p>
+            </div>
+          </div>
+        </div>
+        <div id="score-fallback" class="hidden p-3.5 text-xs text-slate-500" data-testid="score-fallback"></div>
+      </section>
+
+      <!-- Column 2: transcript + audio (BR7.1) -->
+      <section class="col-span-4 bg-white rounded-xl border border-slate-200 flex flex-col overflow-hidden shadow-sm" data-testid="col-transcript">
+        <div class="p-3.5 border-b border-slate-200 bg-slate-50/80 shrink-0 space-y-2">
+          <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Phân tích hội thoại</h3>
+          <audio id="recording-audio" controls class="w-full h-9" data-testid="recording-audio"></audio>
+          <a id="download-wav" class="hidden text-blue-600 font-medium hover:underline text-[11px] inline-flex items-center gap-1" data-testid="download-wav" download>
+            <i class="fa-solid fa-download text-[10px]"></i> Tải file audio (.wav)
+          </a>
+        </div>
+        <div id="transcript-list" class="flex-1 p-3.5 space-y-3 custom-scroll text-xs overflow-y-auto" data-testid="transcript-list"></div>
+        <div id="transcript-fallback" class="hidden px-3.5 py-2.5 text-[11px] text-slate-500 border-t border-slate-200" data-testid="transcript-fallback"></div>
+      </section>
+
+      <!-- Column 3: AI Auto Keyin form (WF4) -->
+      <section class="col-span-4 bg-white rounded-xl border border-slate-200 flex flex-col shadow-sm overflow-hidden" data-testid="col-keyin">
+        <div class="p-3.5 border-b border-slate-200 bg-gradient-to-r from-blue-50/70 to-white shrink-0">
+          <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-bolt text-blue-600"></i> AI Auto Keyin</h3>
+          <p class="text-[11px] text-slate-500 mt-0.5">Tự động trích xuất các trường CRM từ cuộc gọi</p>
+        </div>
+        <form id="keyin-form" class="flex-1 p-3.5 space-y-2.5 custom-scroll text-xs overflow-y-auto" data-testid="keyin-form">
+          <div id="ai-fill-note" class="hidden bg-blue-50 border border-blue-200 text-blue-700 rounded px-2 py-1 text-[11px]" data-testid="ai-fill-note"></div>
+
+          <label class="block">
+            <span class="text-[11px] font-semibold text-slate-600">Giai đoạn lead <span class="text-rose-600">*</span></span>
+            <select name="leadStage" required data-testid="field-leadStage" aria-label="Giai đoạn lead"
+                    class="mt-1 w-full border border-slate-200 rounded px-2 py-1.5 text-xs bg-white">
+              <option value="">-- Chọn giai đoạn --</option>
+              <option value="CHUA_TIEP_CAN">Chưa tiếp cận</option>
+              <option value="DANG_TIEP_CAN">Đang tiếp cận</option>
+              <option value="CHUYEN_CO_HOI">Chuyển cơ hội</option>
+              <option value="TU_CHOI">Từ chối</option>
+            </select>
+          </label>
+
+          <label class="block">
+            <span class="text-[11px] font-semibold text-slate-600">Kết quả cuộc gọi <span class="text-rose-600">*</span></span>
+            <input name="callResult" required data-testid="field-callResult" aria-label="Kết quả cuộc gọi"
+                   class="mt-1 w-full border border-slate-200 rounded px-2 py-1.5 text-xs" placeholder="VD: Khách đồng ý mở sổ" />
+          </label>
+
+          <div class="grid grid-cols-2 gap-2">
+            <label class="block"><span class="text-[10px] font-semibold text-slate-600 flex items-center gap-1">Nhu cầu gửi (VND) <span class="field-badge text-[9px]" data-badge="demandAmount"></span></span>
+              <input name="demandAmount" type="number" min="0" step="1" data-testid="field-demandAmount" aria-label="Nhu cầu gửi tiền VND" class="mt-1 w-full border border-slate-200 rounded px-2 py-1 text-xs font-mono" /></label>
+            <label class="block"><span class="text-[10px] font-semibold text-slate-600 flex items-center gap-1">Kỳ hạn <span class="field-badge text-[9px]" data-badge="term"></span></span>
+              <input name="term" data-testid="field-term" aria-label="Kỳ hạn" class="mt-1 w-full border border-slate-200 rounded px-2 py-1 text-xs" /></label>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="block"><span class="text-[10px] font-semibold text-slate-600 flex items-center gap-1">Lãi suất (%/năm) <span class="field-badge text-[9px]" data-badge="agreedRate"></span></span>
+              <input name="agreedRate" type="number" step="0.01" data-testid="field-agreedRate" aria-label="Lãi suất %/năm" class="mt-1 w-full border border-slate-200 rounded px-2 py-1 text-xs font-mono" /></label>
+            <label class="block"><span class="text-[10px] font-semibold text-slate-600 flex items-center gap-1">Sản phẩm <span class="field-badge text-[9px]" data-badge="product"></span></span>
+              <input name="product" data-testid="field-product" aria-label="Sản phẩm" class="mt-1 w-full border border-slate-200 rounded px-2 py-1 text-xs" /></label>
+          </div>
+          <label class="block"><span class="text-[10px] font-semibold text-slate-600 flex items-center gap-1">Nguồn tiền <span class="field-badge text-[9px]" data-badge="sourceOfFunds"></span></span>
+            <input name="sourceOfFunds" data-testid="field-sourceOfFunds" aria-label="Nguồn tiền" class="mt-1 w-full border border-slate-200 rounded px-2 py-1 text-xs" /></label>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="block"><span class="text-[10px] font-semibold text-slate-600 flex items-center gap-1">Ngày dự kiến <span class="field-badge text-[9px]" data-badge="expectedDate"></span></span>
+              <input name="expectedDate" type="date" data-testid="field-expectedDate" aria-label="Ngày dự kiến" class="mt-1 w-full border border-slate-200 rounded px-2 py-1 text-xs" /></label>
+            <label class="block"><span class="text-[10px] font-semibold text-slate-600 flex items-center gap-1">Kênh <span class="field-badge text-[9px]" data-badge="channel"></span></span>
+              <input name="channel" data-testid="field-channel" aria-label="Kênh thực hiện" class="mt-1 w-full border border-slate-200 rounded px-2 py-1 text-xs" /></label>
+          </div>
+          <label class="block"><span class="text-[10px] font-semibold text-slate-600 flex items-center gap-1">Băn khoăn / Phản đối <span class="field-badge text-[9px]" data-badge="objections"></span></span>
+            <input name="objections" data-testid="field-objections" aria-label="Băn khoăn / phản đối" class="mt-1 w-full border border-slate-200 rounded px-2 py-1 text-xs" /></label>
+          <label class="block"><span class="text-[10px] font-semibold text-slate-600">Ghi chú của RM</span>
+            <textarea name="rmNote" rows="2" data-testid="field-rmNote" aria-label="Ghi chú của RM" class="mt-1 w-full border border-slate-200 rounded px-2 py-1 text-xs resize-none"></textarea></label>
+
+          <!-- AI feedback (US2.3) -->
+          <div class="bg-blue-50/60 border border-blue-200 rounded-lg p-2.5 space-y-1.5">
+            <span class="text-[11px] font-semibold text-slate-700">Đánh giá độ chính xác AI</span>
+            <div class="grid grid-cols-10 gap-1" id="feedback-scale" data-testid="feedback-scale"></div>
+            <textarea name="feedbackComment" rows="2" maxlength="1000" data-testid="field-feedbackComment" aria-label="Góp ý AI" placeholder="Góp ý cho AI..." class="w-full border border-slate-200 rounded px-2 py-1 text-xs resize-none"></textarea>
+          </div>
+
+          <!-- Next tasks (editable, each with clientKey) -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between"><span class="text-[11px] font-semibold text-slate-700">Công việc tiếp theo</span>
+              <button type="button" id="add-task" data-testid="add-task" class="text-blue-600 text-[11px] font-semibold hover:underline">+ Thêm</button></div>
+            <div id="task-list" class="space-y-1.5" data-testid="task-list"></div>
+          </div>
+
+          <!-- Retry button (AI_FAILED fallback, WF6) -->
+          <button type="button" id="retry-analysis" data-testid="retry-analysis"
+                  class="hidden w-full py-2 px-3 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-bold">
+            <i class="fa-solid fa-rotate-right mr-1"></i> Thử phân tích AI lại
+          </button>
+        </form>
+        <div class="p-3 bg-slate-50 border-t border-slate-200 shrink-0">
+          <button type="button" id="save-keyin" data-testid="save-keyin"
+                  class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-2 shadow-md">
+            <i class="fa-solid fa-floppy-disk"></i> Lưu hồ sơ cuộc gọi &amp; Đồng bộ CRM
+          </button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- S4 navigation dialog (BR6.1, AC2.4.4) -->
+  <div id="s4-dialog" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50" data-testid="s4-dialog" role="dialog" aria-modal="true" aria-labelledby="s4-title">
+    <div class="bg-white rounded-xl shadow-2xl w-[380px] p-5 space-y-3">
+      <div class="text-center">
+        <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-2"><i class="fa-solid fa-check text-xl"></i></div>
+        <h2 id="s4-title" class="text-sm font-bold text-slate-900">Đã lưu hồ sơ cuộc gọi thành công!</h2>
+      </div>
+      <button type="button" id="s4-next-lead" data-testid="s4-next-lead" class="w-full py-2.5 px-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold text-left flex items-center gap-2"><i class="fa-solid fa-user-plus"></i> Liên hệ khách hàng tiếp theo</button>
+      <button type="button" id="s4-calendar" data-testid="s4-calendar" class="w-full py-2.5 px-3 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 rounded-lg text-xs font-semibold text-left flex items-center gap-2"><i class="fa-regular fa-calendar text-blue-600"></i> Chi tiết lịch làm việc</button>
+      <button type="button" id="s4-home" data-testid="s4-home" class="w-full py-2.5 px-3 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 rounded-lg text-xs font-semibold text-left flex items-center gap-2"><i class="fa-solid fa-house text-slate-500"></i> Đóng &amp; Quay lại trang chủ</button>
+      <div id="s4-note" class="hidden text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1" data-testid="s4-note"></div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/call-result.js"></script>
+</body>
+</html>

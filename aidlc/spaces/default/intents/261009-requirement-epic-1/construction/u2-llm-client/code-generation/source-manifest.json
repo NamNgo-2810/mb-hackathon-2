@@ -1,0 +1,24 @@
+{
+  "stage": "code-generation",
+  "unit": "u2-llm-client",
+  "version": 1,
+  "writes": [
+    { "path": "backend/src/main/java/com/mb/callassistant/config/AppProperties.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/llm/LlmClient.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/llm/LlmRequest.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/llm/LlmResponse.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/llm/LlmException.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/llm/LlmPurpose.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/llm/LlmProvider.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/llm/LlmRequestValidator.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/llm/MessageBuilder.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/llm/JsonResponses.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/llm/AnthropicLlmClient.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/llm/MockLlmClient.java" },
+    { "path": "backend/src/main/resources/application.properties" },
+    { "path": "backend/src/main/resources/application-demo.properties" },
+    { "path": "backend/.env.example" },
+    { "path": "backend/pom.xml" },
+    { "path": "backend/README.md" }
+  ]
+}

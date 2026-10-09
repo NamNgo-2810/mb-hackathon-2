@@ -1,0 +1,8 @@
+document_id,product_name,source_url,source_description,data_status,effective_from,effective_to,notes
+MB-KHCN-DEMO-001,Vay mua nhà,https://www.mbbank.com.vn/home/ca-nhan,Danh mục KHCN; cần mở và xác minh tài liệu cụ thể,UNVERIFIED,Chưa xác minh,Chưa xác minh,Không dùng con số lãi suất/hạn mức
+MB-KHCN-DEMO-002,Vay mua ô tô,https://www.mbbank.com.vn/home/ca-nhan,Danh mục KHCN; cần mở và xác minh tài liệu cụ thể,UNVERIFIED,Chưa xác minh,Chưa xác minh,Không dùng con số lãi suất/hạn mức
+MB-KHCN-DEMO-003,Vay tiêu dùng tín chấp,https://www.mbbank.com.vn/home/ca-nhan,Danh mục KHCN; cần mở và xác minh tài liệu cụ thể,UNVERIFIED,Chưa xác minh,Chưa xác minh,Không dùng con số lãi suất/hạn mức
+MB-KHCN-DEMO-004,Tiết kiệm có kỳ hạn,https://www.mbbank.com.vn/home/ca-nhan,Danh mục KHCN; cần tra biểu lãi suất theo ngày/kênh/kỳ hạn,UNVERIFIED,Chưa xác minh,Chưa xác minh,Không báo lãi suất hiện tại
+MB-KHCN-DEMO-005,Thẻ tín dụng quốc tế,https://www.mbbank.com.vn/home/ca-nhan,Danh mục KHCN; cần đúng dòng thẻ và biểu phí/điều khoản,UNVERIFIED,Chưa xác minh,Chưa xác minh,Không khẳng định miễn lãi/hoàn tiền chung
+MB-KHCN-DEMO-006,QR Trả Sau,https://www.mbbank.com.vn/faq,Cần đối chiếu trang sản phẩm/điều khoản chính thức còn hiệu lực,UNVERIFIED,Chưa xác minh,Chưa xác minh,Phí/lãi suất cần nguồn và ngày hiệu lực
+MB-KHCN-DEMO-GEN,Quy tắc chatbot demo,README và guardrails của bộ demo,"Quy tắc vận hành do nhóm demo định nghĩa, không phải chính sách MB",SIMULATED,2026-10-09,Không áp dụng,Dùng cho kiểm thử chatbot

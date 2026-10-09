@@ -1,0 +1,3 @@
+FAQ rows (excluding header): 54
+Products: 6
+Generated for demo; not official MB policy.

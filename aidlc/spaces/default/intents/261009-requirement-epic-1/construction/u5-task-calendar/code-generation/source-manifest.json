@@ -1,0 +1,27 @@
+{
+  "stage": "code-generation",
+  "unit": "u5-task-calendar",
+  "version": 1,
+  "writes": [
+    { "path": "backend/src/main/java/com/mb/callassistant/task/TaskType.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/task/TaskPriority.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/task/TaskStatus.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/task/TaskOrigin.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/task/Task.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/task/TaskDraft.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/task/TaskCreate.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/task/TaskRepository.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/task/TaskService.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/web/TaskController.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/web/dto/TaskDto.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/web/dto/TaskCreateRequest.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/web/dto/TaskPatchRequest.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/config/DemoDataSeeder.java" },
+    { "path": "backend/pom.xml" },
+    { "path": "backend/README.md" },
+    { "path": "public/screens/5-lich-lam-viec.html" },
+    { "path": "public/js/calendar.js" },
+    { "path": "public/js/api.js" },
+    { "path": "server/index.js" }
+  ]
+}

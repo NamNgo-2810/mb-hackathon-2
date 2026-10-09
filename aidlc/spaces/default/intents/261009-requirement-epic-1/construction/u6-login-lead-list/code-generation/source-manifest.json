@@ -1,0 +1,31 @@
+{
+  "stage": "code-generation",
+  "unit": "u6-login-lead-list",
+  "version": 1,
+  "writes": [
+    { "path": "backend/src/main/java/com/mb/callassistant/auth/AuthSession.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/auth/AuthSessionRepository.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/auth/TokenHasher.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/auth/AuthTokenService.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/auth/AuthContext.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/auth/BearerTokenFilter.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/auth/LoginCurrentRmProvider.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/auth/PasswordHasher.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/auth/LoginRmSeeder.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/auth/AuthController.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/auth/LoginRequest.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/auth/LoginResponse.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/config/AppProperties.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/web/UnauthorizedException.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/web/ApiExceptionHandler.java" },
+    { "path": "backend/src/main/java/com/mb/callassistant/web/LeadListController.java" },
+    { "path": "backend/pom.xml" },
+    { "path": "backend/src/main/resources/application.properties" },
+    { "path": "backend/.env.example" },
+    { "path": "backend/README.md" },
+    { "path": "public/screens/0-dang-nhap.html" },
+    { "path": "public/screens/leads-list.html" },
+    { "path": "public/js/api.js" },
+    { "path": "server/index.js" }
+  ]
+}

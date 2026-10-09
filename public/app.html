@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CRM Call Assistant — RM (demo)</title>
+<!--
+  Deliberately simple, no-build-step placeholder UI (FR1). It is modular so the
+  Figma-matched MB design (3 RM screens) can replace it tomorrow:
+    - endpoints live in js/config.js
+    - network calls live in js/api.js
+    - rendering lives in js/ui.js
+  TODO (Figma UI, tomorrow): swap the markup below for the MB design-system
+  components; the js/* modules stay the same.
+-->
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: grid; place-items: start center;
+    font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+    background: #0f1115; color: #e8eaed; padding: 32px 16px;
+  }
+  .card {
+    width: 560px; max-width: 100%; background: #171a21; border: 1px solid #2a2f3a;
+    border-radius: 12px; padding: 24px; margin-bottom: 16px;
+  }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  h2 { font-size: 13px; margin: 0 0 12px; color: #9aa0ab; text-transform: uppercase; letter-spacing: .04em; }
+  p.sub { margin: 0 0 18px; color: #9aa0ab; font-size: 13px; }
+  label { display: block; font-size: 13px; color: #9aa0ab; margin-bottom: 12px; }
+  input {
+    display: block; width: 100%; margin-top: 6px; padding: 10px 12px; border-radius: 8px;
+    border: 1px solid #2a2f3a; background: #1f2430; color: #e8eaed; font-size: 15px;
+  }
+  input:focus { outline: none; border-color: #4c8bf5; }
+  .row { display: flex; gap: 12px; }
+  .row > * { flex: 1; }
+  button {
+    width: 100%; padding: 11px; border: 0; border-radius: 8px; cursor: pointer;
+    background: #4c8bf5; color: #fff; font-size: 15px; margin-top: 4px;
+  }
+  button:hover { background: #3a76db; }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  button.danger { background: #e5484d; } button.danger:hover { background: #c93b40; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px;
+    border-radius: 999px; font-size: 13px; background: #1f2430; border: 1px solid #2a2f3a;
+  }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: #9aa0ab; }
+  .dot.ok { background: #2ecc71; } .dot.warn { background: #f5a623; } .dot.err { background: #e5484d; }
+  .error { color: #e5484d; font-size: 13px; margin: 10px 0 0; white-space: pre-wrap; }
+  .muted { color: #9aa0ab; font-size: 13px; }
+  .hidden { display: none; }
+  .transcript { margin-top: 12px; max-height: 340px; overflow-y: auto; }
+  .turn { display: grid; grid-template-columns: 42px 56px 1fr; gap: 8px; padding: 8px 10px;
+    border-radius: 8px; margin-bottom: 6px; background: #1f2430; align-items: baseline; }
+  .turn-rm { border-left: 3px solid #4c8bf5; }
+  .turn-kh { border-left: 3px solid #2ecc71; }
+  .turn .who { font-weight: 700; font-size: 12px; }
+  .turn-rm .who { color: #7aa7f7; } .turn-kh .who { color: #5fd38b; }
+  .turn .time { color: #6b7280; font: 12px ui-monospace, Menlo, monospace; }
+  .turn .text { line-height: 1.5; }
+  .links { margin-top: 12px; } .links a { color: #7aa7f7; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>CRM Call Assistant <span class="muted">(demo)</span></h1>
+    <p class="sub">RM lead/call view — placeholder UI, to be replaced by the Figma MB design.</p>
+
+    <!-- Lead / dial -->
+    <h2>Khách hàng (Lead)</h2>
+    <label>Số điện thoại khách hàng
+      <input id="phone" data-testid="lead-phone-input" value="1001" />
+    </label>
+    <label>Mã TNB (Branch)
+      <input id="tnb" data-testid="lead-tnb-input" value="TNB001" />
+    </label>
+
+    <div class="row">
+      <button id="callBtn" data-testid="call-button">Gọi khách hàng (Call)</button>
+      <button id="endBtn" class="danger hidden" data-testid="end-call-button">Kết thúc / End call</button>
+    </div>
+    <p id="pill" class="pill" data-testid="call-status-pill" style="margin-top:14px;">
+      <span class="dot"></span><span>Chưa có cuộc gọi</span>
+    </p>
+    <p id="err" class="error hidden" data-testid="error-message"></p>
+  </div>
+
+  <!-- Post-call view stub -->
+  <div class="card hidden" id="postCall" data-testid="post-call-card">
+    <h2>Sau cuộc gọi (Post-call)</h2>
+    <p id="postStatus" class="muted" data-testid="pipeline-status">—</p>
+    <div id="links" class="links"></div>
+    <div id="transcript" class="transcript" data-testid="transcript-container"></div>
+  </div>
+
+  <script type="module">
+    import { initiateCall, endCall, microsipCall, microsipHangup, getTranscript, pollUntilReady } from './js/api.js';
+    import { setStatus, showError, statusLabel, renderTranscript, renderRecordingLink } from './js/ui.js';
+
+    const $ = (id) => document.getElementById(id);
+    const pill = $('pill'), err = $('err'), postCard = $('postCall'),
+          postStatus = $('postStatus'), transcriptEl = $('transcript'), linksEl = $('links');
+
+    let currentCallId = null;
+
+    $('callBtn').addEventListener('click', async () => {
+      showError(err, '');
+      const phoneNumber = $('phone').value.trim();
+      const tnbCode = $('tnb').value.trim();
+      $('callBtn').disabled = true;
+      try {
+        setStatus(pill, 'Đang mở phiếu cuộc gọi…', 'busy');
+        const call = await initiateCall(phoneNumber, tnbCode);
+        currentCallId = call.id;
+
+        setStatus(pill, 'Đang gọi qua MicroSIP…', 'busy');
+        await microsipCall(phoneNumber);  // reuse existing Node route (FR1.1)
+
+        setStatus(pill, `Đang gọi #${call.id} (${phoneNumber})`, 'ok');
+        $('endBtn').classList.remove('hidden');
+      } catch (e) {
+        setStatus(pill, 'Không gọi được', 'err');
+        showError(err, e.message || String(e));
+        $('callBtn').disabled = false;
+      }
+    });
+
+    $('endBtn').addEventListener('click', async () => {
+      if (!currentCallId) return;
+      showError(err, '');
+      $('endBtn').disabled = true;
+      try {
+        await microsipHangup().catch(() => {});  // best-effort hangup of the softphone
+        await endCall(currentCallId);             // start the download → STT pipeline (FR1.3)
+        setStatus(pill, 'Cuộc gọi kết thúc — đang xử lý', 'warn');
+        $('endBtn').classList.add('hidden');
+        $('callBtn').disabled = false;
+        await showPostCall(currentCallId);
+      } catch (e) {
+        showError(err, e.message || String(e));
+        $('endBtn').disabled = false;
+      }
+    });
+
+    // Poll the pipeline and render the transcript + recording when ready.
+    async function showPostCall(callId) {
+      postCard.classList.remove('hidden');
+      $('endBtn').disabled = false;
+      postStatus.textContent = statusLabel('PROCESSING');
+      try {
+        const final = await pollUntilReady(callId, (snap) => {
+          postStatus.textContent = statusLabel(snap.sttStatus);
+        });
+        if (final.sttStatus === 'DONE') {
+          const turns = await getTranscript(callId);
+          renderTranscript(transcriptEl, turns);
+          renderRecordingLink(linksEl, callId);
+        } else {
+          showError(err, final.errorDetail || 'Xử lý thất bại.');
+        }
+      } catch (e) {
+        showError(err, e.message || String(e));
+      }
+    }
+  </script>
+</body>
+</html>
